@@ -96,7 +96,7 @@
     "documents_rls": "portal/documents/page.tsx calls listDocuments({ visibleToClient: true }), team/documents/page.tsx calls listDocuments() (all). RLS filtering implemented correctly in code.",
     "calendar_aggregation": "team/calendar/page.tsx aggregates GST/TDS/IT filings + notices + hearings + DSC expiries into unified event array. Code is correct.",
     "test_credentials_used": "Admin: info@fiscalfulcrum.in / Admin@TFF2026, Team: team.demo@fiscalfulcrum.in / Team@TFF2026, Client: client.demo@fiscalfulcrum.in / Client@TFF2026 (from review_request)",
-    "preview_url": "https://business-lens-6.preview.emergentagent.com (port 3000 proxy, Next.js on port 3001)",
+    "preview_url": "https://fulcrum-validation.preview.emergentagent.com (port 3000 proxy, Next.js on port 3001)",
     "next_steps_for_user": "User should manually verify interactive features listed in medium_priority action items. All core pages load correctly and no blocking regressions found. Ready for user's final consolidated revision pass."
   }
 }
