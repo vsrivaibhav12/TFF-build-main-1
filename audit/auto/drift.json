@@ -1,0 +1,531 @@
+{
+  "missing_tables": [
+    {
+      "table": "query_replies",
+      "fileSamples": [
+        "lib/actions/queries.ts"
+      ]
+    },
+    {
+      "table": "dsc",
+      "fileSamples": [
+        "app/admin/compliance/page.tsx"
+      ]
+    }
+  ],
+  "unused_tables_in_app": [
+    "benchmarks",
+    "client_communication_log",
+    "client_feature_flags",
+    "client_lifecycle_stage",
+    "engagement_letters",
+    "firm_profile",
+    "payroll_adjustments",
+    "task_document_requests",
+    "vendor_gst_filings",
+    "vendors"
+  ],
+  "column_drift": [
+    {
+      "table": "users_profile",
+      "missing": [
+        "action",
+        "assigned_to",
+        "client_id",
+        "description",
+        "due_date",
+        "email_sent",
+        "entity_id",
+        "entity_type",
+        "html",
+        "is_blocked_on_client",
+        "name",
+        "onConflict",
+        "performed_by",
+        "period_month",
+        "period_year",
+        "priority",
+        "role_in_client",
+        "sub_service_id",
+        "subject",
+        "teamUserId",
+        "title",
+        "to",
+        "user_id"
+      ]
+    },
+    {
+      "table": "attendance_logs",
+      "missing": [
+        "onConflict"
+      ]
+    },
+    {
+      "table": "clients",
+      "missing": [
+        "assigned_from",
+        "assigned_to",
+        "benchmark_value",
+        "client_id",
+        "clients",
+        "dsc_class",
+        "dsc_type",
+        "expiry_date",
+        "headline",
+        "holder_name",
+        "insight_type",
+        "insights_recorded",
+        "is_active",
+        "name",
+        "narrative",
+        "payload",
+        "portal_name",
+        "raw_value",
+        "recommended_action",
+        "role",
+        "role_in_client",
+        "severity",
+        "teamUserId",
+        "team_user_id",
+        "user_id"
+      ]
+    },
+    {
+      "table": "client_import_batches",
+      "missing": [
+        "batch_id"
+      ]
+    },
+    {
+      "table": "compliance_calendar_rules",
+      "missing": [
+        "generated",
+        "regenerated"
+      ]
+    },
+    {
+      "table": "credentials",
+      "missing": [
+        "action",
+        "details",
+        "entity_id",
+        "entity_type",
+        "password",
+        "performed_by"
+      ]
+    },
+    {
+      "table": "tasks",
+      "missing": [
+        "action",
+        "ascending",
+        "changed_by",
+        "created_by",
+        "display_order",
+        "document_name",
+        "duration_minutes",
+        "ended_at",
+        "entry_method",
+        "field_name",
+        "is_required",
+        "message",
+        "new_value",
+        "note",
+        "related_entity_id",
+        "related_entity_type",
+        "started_at",
+        "task_id",
+        "type",
+        "unblocked",
+        "userId",
+        "user_id",
+        "work_date"
+      ]
+    },
+    {
+      "table": "document_requests",
+      "missing": [
+        "action",
+        "changed_by",
+        "document_id",
+        "field_name",
+        "new_value",
+        "unblocked"
+      ]
+    },
+    {
+      "table": "client_users",
+      "missing": [
+        "assigned_from",
+        "is_enabled",
+        "module_key",
+        "name",
+        "onConflict",
+        "payload",
+        "role",
+        "teamUserId",
+        "team_user_id",
+        "updated_by"
+      ]
+    },
+    {
+      "table": "task_activity",
+      "missing": [
+        "ascending",
+        "completed_at",
+        "description",
+        "display_order",
+        "document_id",
+        "document_name",
+        "is_required",
+        "unblocked"
+      ]
+    },
+    {
+      "table": "documents",
+      "missing": [
+        "action",
+        "changed_by",
+        "contentType",
+        "field_name",
+        "fulfilled_at",
+        "fulfilled_by_document_id",
+        "message",
+        "new_value",
+        "related_entity_id",
+        "related_entity_type",
+        "task_id",
+        "title",
+        "type",
+        "upsert",
+        "user_id"
+      ]
+    },
+    {
+      "table": "dsc_records",
+      "missing": [
+        "checked",
+        "portal_name"
+      ]
+    },
+    {
+      "table": "leave_requests",
+      "missing": [
+        "message",
+        "related_entity_id",
+        "related_entity_type",
+        "title",
+        "type"
+      ]
+    },
+    {
+      "table": "notices",
+      "missing": [
+        "amountInvolved",
+        "clientId",
+        "hearing_held_date",
+        "hearing_scheduled_date",
+        "hearing_type",
+        "identifiedBy",
+        "next_hearing_date",
+        "noticeId",
+        "noticeSubject",
+        "notice_id"
+      ]
+    },
+    {
+      "table": "notifications",
+      "missing": [
+        "digests_sent",
+        "email_frequency",
+        "in_app_enabled",
+        "onConflict",
+        "recipients"
+      ]
+    },
+    {
+      "table": "notification_preferences",
+      "missing": [
+        "email_sent",
+        "html",
+        "input",
+        "message",
+        "notification_type",
+        "onConflict",
+        "related_entity_id",
+        "related_entity_type",
+        "send_via_email",
+        "subject",
+        "title",
+        "to"
+      ]
+    },
+    {
+      "table": "staff_payroll_settings",
+      "missing": [
+        "onConflict"
+      ]
+    },
+    {
+      "table": "payroll_runs",
+      "missing": [
+        "deduction_applicable",
+        "monthly_salary",
+        "onConflict",
+        "paid_leaves_per_month",
+        "salary_adjustment_for_leaves"
+      ]
+    },
+    {
+      "table": "client_portal_visibility",
+      "missing": [
+        "action",
+        "details",
+        "entity_id",
+        "entity_type",
+        "onConflict",
+        "performedBy",
+        "performed_by"
+      ]
+    },
+    {
+      "table": "queries",
+      "missing": [
+        "clientId",
+        "identifiedBy",
+        "message",
+        "queryId",
+        "query_id",
+        "user_id"
+      ]
+    },
+    {
+      "table": "staff_role_templates",
+      "missing": [
+        "action",
+        "capabilities",
+        "capability",
+        "capability_count",
+        "details",
+        "entity_id",
+        "entity_type",
+        "granted",
+        "performed_by",
+        "template_id",
+        "user_id"
+      ]
+    },
+    {
+      "table": "staff_role_template_capabilities",
+      "missing": [
+        "action",
+        "active_role_template_id",
+        "capabilities",
+        "capability_count",
+        "details",
+        "entity_id",
+        "entity_type",
+        "performed_by",
+        "user_id"
+      ]
+    },
+    {
+      "table": "saved_views",
+      "missing": [
+        "ascending",
+        "onConflict"
+      ]
+    },
+    {
+      "table": "services",
+      "missing": [
+        "due_day_of_month",
+        "frequency",
+        "is_active",
+        "is_recurring",
+        "is_required",
+        "requires_client_input",
+        "requires_verification",
+        "service_id",
+        "step_order",
+        "title",
+        "updated_at"
+      ]
+    },
+    {
+      "table": "sub_services",
+      "missing": [
+        "is_required",
+        "step_order",
+        "sub_service_id",
+        "title"
+      ]
+    },
+    {
+      "table": "sub_service_sop_steps",
+      "missing": [
+        "client_id",
+        "is_active",
+        "service_id"
+      ]
+    },
+    {
+      "table": "client_sub_services",
+      "missing": [
+        "description",
+        "is_blocked_on_client",
+        "priority",
+        "service_id",
+        "title"
+      ]
+    },
+    {
+      "table": "client_services",
+      "missing": [
+        "assigned_to",
+        "description",
+        "due_date",
+        "is_blocked_on_client",
+        "period_month",
+        "period_year",
+        "priority",
+        "sub_service_id",
+        "title"
+      ]
+    },
+    {
+      "table": "staff_capabilities",
+      "missing": [
+        "action",
+        "details",
+        "entity_id",
+        "entity_type",
+        "granted",
+        "message",
+        "performed_by",
+        "revoked",
+        "title",
+        "type"
+      ]
+    },
+    {
+      "table": "task_custom_field_values",
+      "missing": [
+        "code",
+        "color_hex",
+        "display_name",
+        "onConflict"
+      ]
+    },
+    {
+      "table": "task_labels",
+      "missing": [
+        "assigned",
+        "label_code",
+        "onConflict",
+        "task_id"
+      ]
+    },
+    {
+      "table": "task_label_assignments",
+      "missing": [
+        "onConflict"
+      ]
+    },
+    {
+      "table": "task_steps",
+      "missing": [
+        "action",
+        "ascending",
+        "changed_by",
+        "field_name",
+        "new_value",
+        "step_id",
+        "step_ids"
+      ]
+    },
+    {
+      "table": "task_templates",
+      "missing": [
+        "guidance_notes",
+        "is_required",
+        "step_order",
+        "task_template_id"
+      ]
+    },
+    {
+      "table": "vcfo_snapshots",
+      "missing": [
+        "clientId",
+        "identifiedBy",
+        "onConflict",
+        "snapshotId"
+      ]
+    },
+    {
+      "table": "solution_log",
+      "missing": [
+        "actualFinancialImpact",
+        "actualOutcome",
+        "category",
+        "clientId",
+        "description",
+        "identifiedBy",
+        "recommendedSolution"
+      ]
+    },
+    {
+      "table": "bizlens_data",
+      "missing": [
+        "updates"
+      ]
+    },
+    {
+      "table": "client_groups",
+      "missing": [
+        "business_name",
+        "category",
+        "client_id",
+        "group_id",
+        "gstin",
+        "is_active",
+        "lifecycle_stage",
+        "notes",
+        "onConflict",
+        "pan",
+        "portal_enabled",
+        "primary_owner_id",
+        "role_in_client",
+        "user_id"
+      ]
+    },
+    {
+      "table": "team_client_assignment",
+      "missing": [
+        "is_deleted",
+        "is_enabled",
+        "module_key",
+        "name",
+        "onConflict",
+        "payload",
+        "updated_by"
+      ]
+    },
+    {
+      "table": "service_categories",
+      "missing": [
+        "category_id",
+        "code",
+        "service_id",
+        "service_kind"
+      ]
+    },
+    {
+      "table": "task_notes",
+      "missing": [
+        "completed_at",
+        "is_required"
+      ]
+    }
+  ]
+}

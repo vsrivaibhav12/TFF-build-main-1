@@ -1,0 +1,1892 @@
+{
+  "users_profile": {
+    "selectCols": [
+      "role",
+      "is_prime_admin",
+      "geo_check_in_required",
+      "manager_id",
+      "full_name",
+      "id",
+      "email",
+      "is_active",
+      "active_role_template_id",
+      "phone_number",
+      "job_title",
+      "department"
+    ],
+    "writeCols": [
+      "role",
+      "updated_at",
+      "active_role_template_id",
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "id",
+      "full_name",
+      "email",
+      "job_title",
+      "department",
+      "phone_number",
+      "is_active",
+      "user_id",
+      "client_id",
+      "role_in_client",
+      "teamUserId",
+      "to",
+      "subject",
+      "html",
+      "email_sent",
+      "sub_service_id",
+      "title",
+      "description",
+      "is_blocked_on_client",
+      "priority",
+      "due_date",
+      "period_year",
+      "period_month",
+      "assigned_to",
+      "is_verified",
+      "onConflict",
+      "name"
+    ],
+    "files": [
+      "lib/actions/admin-hierarchy.ts",
+      "lib/actions/attendance.ts",
+      "lib/actions/leave.ts",
+      "lib/actions/role-templates.ts",
+      "lib/actions/team.ts",
+      "lib/auth/require-role.ts",
+      "lib/repositories/clients.ts",
+      "lib/repositories/role-templates.ts",
+      "lib/services/client-service.ts",
+      "lib/services/notification-service.ts",
+      "lib/supabase/middleware.ts",
+      "app/admin/settings/billing-entities/page.tsx",
+      "app/admin/tasks/bulk-create/page.tsx",
+      "app/admin/team/[id]/capabilities/page.tsx",
+      "app/admin/team/[id]/page.tsx",
+      "app/api/cron/notification-digest/route.ts",
+      "app/team/attendance/page.tsx",
+      "components/sophistication/security-banner-server.tsx",
+      "scripts/seed-c-demo.ts",
+      "scripts/seed-rollback.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "attendance_logs": {
+    "selectCols": [
+      "id",
+      "status",
+      "user_id",
+      "attendance_date",
+      "check_in_time",
+      "check_out_time",
+      "leave_type",
+      "is_manually_created",
+      "override_reason",
+      "check_in_lat",
+      "check_in_lng",
+      "check_in_accuracy_m",
+      "users_profile!attendance_logs_user_id_fkey(full_name)",
+      "overridden_by"
+    ],
+    "writeCols": [
+      "user_id",
+      "attendance_date",
+      "check_in_time",
+      "check_in_lat",
+      "check_in_lng",
+      "check_in_accuracy_m",
+      "onConflict",
+      "check_out_time",
+      "leave_type",
+      "override_reason",
+      "is_manually_created",
+      "overridden_by"
+    ],
+    "files": [
+      "lib/actions/attendance.ts",
+      "lib/actions/payroll.ts",
+      "lib/repositories/attendance.ts",
+      "app/admin/attendance/page.tsx"
+    ]
+  },
+  "profit_centres": {
+    "selectCols": [
+      "code",
+      "name",
+      "description",
+      "is_active"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/billing-org.ts",
+      "app/admin/settings/billing-entities/page.tsx",
+      "app/admin/settings/profit-cost-centres/page.tsx"
+    ]
+  },
+  "cost_centres": {
+    "selectCols": [
+      "code",
+      "name",
+      "description",
+      "is_active"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/billing-org.ts",
+      "app/admin/settings/profit-cost-centres/page.tsx"
+    ]
+  },
+  "billing_entities": {
+    "selectCols": [
+      "id",
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/billing-org.ts",
+      "app/admin/settings/billing-entities/page.tsx"
+    ]
+  },
+  "user_billing_entity_access": {
+    "selectCols": [
+      "user_id",
+      "billing_entity_id"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/billing-org.ts",
+      "app/admin/settings/billing-entities/page.tsx"
+    ]
+  },
+  "clients": {
+    "selectCols": [
+      "pan",
+      "gstin",
+      "id",
+      "business_name",
+      "category",
+      "lifecycle_stage",
+      "primary_contact_person",
+      "primary_contact_email",
+      "primary_owner_id",
+      "group_id",
+      "portal_enabled",
+      "created_at",
+      "updated_at",
+      "client_groups!clients_group_id_fkey(name)",
+      "*"
+    ],
+    "writeCols": [
+      "teamUserId",
+      "role",
+      "client_id",
+      "team_user_id",
+      "assigned_from",
+      "assigned_to",
+      "name",
+      "payload",
+      "is_deleted",
+      "insight_type",
+      "headline",
+      "narrative",
+      "raw_value",
+      "benchmark_value",
+      "severity",
+      "recommended_action",
+      "clients",
+      "insights_recorded",
+      "holder_name",
+      "dsc_class",
+      "dsc_type",
+      "expiry_date",
+      "portal_name",
+      "business_name",
+      "category",
+      "pan",
+      "gstin",
+      "group_id",
+      "primary_owner_id",
+      "lifecycle_stage",
+      "portal_enabled",
+      "notes",
+      "user_id",
+      "role_in_client",
+      "is_active"
+    ],
+    "files": [
+      "lib/actions/client-import.ts",
+      "lib/repositories/clients.ts",
+      "app/admin/bizlens/page.tsx",
+      "app/admin/page.tsx",
+      "app/admin/reports/client-services/page.tsx",
+      "app/admin/reports/group-wise/page.tsx",
+      "app/admin/tasks/bulk-create/page.tsx",
+      "app/admin/tasks/page.tsx",
+      "app/api/cmdk/search/route.ts",
+      "app/api/cron/generate-insights/route.ts",
+      "app/portal/bizlens/[reportId]/page.tsx",
+      "scripts/patch-portal-visibility.ts",
+      "scripts/run-rls-tests.ts",
+      "scripts/seed-c-demo.ts",
+      "scripts/seed-demo-compliance-profile.ts",
+      "scripts/seed-rollback.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "client_import_batches": {
+    "selectCols": [
+      "id",
+      "source_filename",
+      "total_rows",
+      "successful_rows",
+      "skipped_rows",
+      "error_rows",
+      "errors",
+      "status",
+      "uploaded_at",
+      "users_profile:uploaded_by(full_name, email)",
+      "users_profile:uploaded_by(full_name)"
+    ],
+    "writeCols": [
+      "uploaded_by",
+      "source_filename",
+      "total_rows",
+      "successful_rows",
+      "skipped_rows",
+      "error_rows",
+      "errors",
+      "batch_id"
+    ],
+    "files": [
+      "lib/actions/client-import.ts",
+      "app/admin/clients/import/[id]/page.tsx",
+      "app/admin/clients/import/page.tsx"
+    ]
+  },
+  "client_compliance_profiles": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/compliance-calendar.ts",
+      "lib/services/compliance-calendar-engine.ts",
+      "scripts/seed-demo-compliance-profile.ts"
+    ]
+  },
+  "compliance_calendar_rules": {
+    "selectCols": [
+      "id",
+      "*",
+      "rule_code",
+      "display_name",
+      "service_kind",
+      "periodicity",
+      "due_day",
+      "due_month_offset",
+      "due_date_formula",
+      "applies_when",
+      "reminder_days",
+      "description",
+      "is_active"
+    ],
+    "writeCols": [
+      "is_active",
+      "updated_at",
+      "regenerated",
+      "generated"
+    ],
+    "files": [
+      "lib/actions/compliance-calendar.ts",
+      "lib/services/compliance-calendar-engine.ts",
+      "app/admin/settings/compliance-rules/page.tsx"
+    ]
+  },
+  "credentials": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "portal_name",
+      "encrypted_password",
+      "encrypted_security_answer",
+      "portal_url",
+      "username",
+      "is_active",
+      "last_used_date",
+      "updated_at",
+      "clients(business_name)",
+      "security_question"
+    ],
+    "writeCols": [
+      "is_deleted",
+      "updated_at",
+      "entity_type",
+      "entity_id",
+      "password",
+      "last_used_date",
+      "action",
+      "performed_by",
+      "details",
+      "client_id",
+      "portal_name"
+    ],
+    "files": [
+      "lib/actions/credentials.ts",
+      "lib/repositories/credentials.ts",
+      "scripts/run-rls-tests.ts"
+    ]
+  },
+  "tasks": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "is_blocked_on_client",
+      "assigned_to",
+      "document_name",
+      "description",
+      "is_required",
+      "display_order",
+      "task_number",
+      "title",
+      "status",
+      "priority",
+      "due_date",
+      "period_year",
+      "period_month",
+      "period_quarter",
+      "reviewer_id",
+      "sub_service_id",
+      "is_stuck",
+      "stuck_reason_code",
+      "verification_status",
+      "is_billable",
+      "bill_reference",
+      "is_verified",
+      "created_at",
+      "updated_at",
+      "clients!tasks_client_id_fkey(id, business_name)",
+      "*",
+      "sub_services!tasks_sub_service_id_fkey(code, name, services!sub_services_service_id_fkey(name))",
+      "assignee:users_profile!tasks_assigned_to_fkey(id, full_name, email)",
+      "reviewer:users_profile!tasks_reviewer_id_fkey(id, full_name, email)",
+      "bill_amount",
+      "billed",
+      "billed_date",
+      "completed_date",
+      "clients!tasks_client_id_fkey(business_name)",
+      "clients(business_name)",
+      "users_profile!tasks_assigned_to_fkey(full_name)",
+      "sub_services!tasks_sub_service_id_fkey(name, services!sub_services_service_id_fkey(name))",
+      "users_profile:assigned_to(full_name)",
+      "users_profile!tasks_assigned_to_fkey(email, full_name)"
+    ],
+    "writeCols": [
+      "task_id",
+      "client_id",
+      "document_name",
+      "description",
+      "is_required",
+      "due_date",
+      "created_by",
+      "user_id",
+      "type",
+      "title",
+      "message",
+      "related_entity_type",
+      "related_entity_id",
+      "work_date",
+      "duration_minutes",
+      "note",
+      "entry_method",
+      "id",
+      "started_at",
+      "ended_at",
+      "is_blocked_on_client",
+      "updated_at",
+      "action",
+      "field_name",
+      "new_value",
+      "changed_by",
+      "unblocked",
+      "ascending",
+      "userId",
+      "is_deleted",
+      "deleted_at",
+      "deleted_by"
+    ],
+    "files": [
+      "lib/actions/document-requests.ts",
+      "lib/actions/workdone.ts",
+      "lib/repositories/document-requests.ts",
+      "lib/repositories/tasks.ts",
+      "app/admin/billing/page.tsx",
+      "app/admin/compliance/page.tsx",
+      "app/admin/page.tsx",
+      "app/admin/reports/client-services/page.tsx",
+      "app/admin/reports/group-wise/page.tsx",
+      "app/admin/reports/pending-billing/page.tsx",
+      "app/admin/reports/service-wise/page.tsx",
+      "app/admin/tasks/page.tsx",
+      "app/api/cmdk/search/route.ts",
+      "app/api/cron/due-alerts/route.ts",
+      "app/api/cron/generate-monthly-tasks/route.ts",
+      "scripts/run-rls-tests.ts",
+      "scripts/seed-c-demo.ts",
+      "scripts/seed-rollback.ts"
+    ]
+  },
+  "document_requests": {
+    "selectCols": [
+      "id",
+      "document_name",
+      "task_id",
+      "client_id",
+      "fulfilled_at",
+      "*",
+      "fulfilled_by:fulfilled_by_user_id(full_name)",
+      "tasks(title, status, due_date)",
+      "is_required"
+    ],
+    "writeCols": [
+      "fulfilled_at",
+      "fulfilled_by_document_id",
+      "fulfilled_by_user_id",
+      "task_id",
+      "action",
+      "field_name",
+      "new_value",
+      "changed_by",
+      "unblocked",
+      "document_id"
+    ],
+    "files": [
+      "lib/actions/document-requests.ts",
+      "lib/actions/portal-uploads.ts",
+      "lib/repositories/document-requests.ts"
+    ]
+  },
+  "client_users": {
+    "selectCols": [
+      "user_id",
+      "client_id",
+      "id",
+      "role_in_client",
+      "is_active",
+      "users_profile!client_users_user_id_fkey(id, full_name, email)"
+    ],
+    "writeCols": [
+      "client_id",
+      "user_id",
+      "role_in_client",
+      "is_active",
+      "updated_at",
+      "teamUserId",
+      "role",
+      "name",
+      "payload",
+      "team_user_id",
+      "assigned_from",
+      "module_key",
+      "is_enabled",
+      "updated_by",
+      "onConflict"
+    ],
+    "files": [
+      "lib/actions/document-requests.ts",
+      "lib/actions/documents.ts",
+      "lib/actions/tasks.ts",
+      "lib/auth/portal-visibility.ts",
+      "lib/repositories/clients.ts",
+      "lib/services/client-service.ts",
+      "app/portal/bizlens/[reportId]/page.tsx",
+      "app/portal/bizlens/page.tsx",
+      "app/portal/vcfo/solution-log/page.tsx",
+      "scripts/seed-rollback.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "sub_service_document_request_templates": {
+    "selectCols": [
+      "document_name",
+      "description",
+      "is_required",
+      "display_order",
+      "id"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/document-requests.ts",
+      "lib/repositories/document-requests.ts"
+    ]
+  },
+  "task_activity": {
+    "selectCols": [
+      "id",
+      "created_at",
+      "document_name",
+      "description",
+      "is_required",
+      "display_order",
+      "action",
+      "field_name",
+      "old_value",
+      "new_value",
+      "users_profile!task_activity_changed_by_fkey(full_name, email)",
+      "completed_at"
+    ],
+    "writeCols": [
+      "task_id",
+      "action",
+      "field_name",
+      "new_value",
+      "changed_by",
+      "unblocked",
+      "document_id",
+      "ascending"
+    ],
+    "files": [
+      "lib/actions/document-requests.ts",
+      "lib/actions/portal-uploads.ts",
+      "lib/actions/task-steps.ts",
+      "lib/actions/tasks.ts",
+      "lib/repositories/document-requests.ts",
+      "lib/repositories/tasks.ts"
+    ]
+  },
+  "documents": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "file_name",
+      "file_url",
+      "file_size",
+      "document_category",
+      "document_period_month",
+      "document_period_year",
+      "visible_to_client",
+      "description",
+      "uploaded_by",
+      "created_at",
+      "clients(business_name)",
+      "users_profile!documents_uploaded_by_fkey(full_name)"
+    ],
+    "writeCols": [
+      "uploaded_by",
+      "visible_to_team",
+      "user_id",
+      "type",
+      "title",
+      "message",
+      "related_entity_type",
+      "related_entity_id",
+      "id",
+      "is_deleted",
+      "deleted_at",
+      "deleted_by",
+      "visible_to_client",
+      "updated_at",
+      "contentType",
+      "upsert",
+      "client_id",
+      "file_name",
+      "file_url",
+      "file_size",
+      "file_type",
+      "description",
+      "fulfilled_at",
+      "fulfilled_by_document_id",
+      "task_id",
+      "action",
+      "field_name",
+      "new_value",
+      "changed_by"
+    ],
+    "files": [
+      "lib/actions/documents.ts",
+      "lib/actions/portal-uploads.ts",
+      "lib/repositories/documents.ts",
+      "app/admin/documents/page.tsx",
+      "app/team/documents/document-upload.tsx"
+    ]
+  },
+  "dsc_records": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "holder_name",
+      "holder_contact_email",
+      "dsc_class",
+      "dsc_type",
+      "certificate_serial",
+      "certificate_issuer",
+      "issued_date",
+      "expiry_date",
+      "registered_portals",
+      "status",
+      "custodian_name",
+      "physical_location",
+      "clients(business_name)",
+      "*",
+      "expiry_alert_sent",
+      "clients(business_name, primary_contact_email)",
+      "clients(business_name, primary_contact_email, primary_owner_id)"
+    ],
+    "writeCols": [
+      "is_deleted",
+      "updated_at",
+      "expiry_alert_sent",
+      "expiry_alert_sent_date",
+      "checked",
+      "holder_name",
+      "client_id",
+      "dsc_class",
+      "dsc_type",
+      "expiry_date",
+      "portal_name"
+    ],
+    "files": [
+      "lib/actions/dsc.ts",
+      "lib/repositories/dsc.ts",
+      "app/admin/page.tsx",
+      "app/api/cron/dsc-alerts/route.ts",
+      "scripts/run-rls-tests.ts"
+    ]
+  },
+  "gst_monthly_data": {
+    "selectCols": [
+      "*",
+      "clients!gst_monthly_data_client_id_fkey(business_name)"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/gst-monthly.ts",
+      "lib/repositories/gst.ts",
+      "app/admin/gst/monthly-data/page.tsx"
+    ]
+  },
+  "hearings": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "hearing_type",
+      "hearing_scheduled_date",
+      "hearing_held_date",
+      "next_hearing_date",
+      "status",
+      "venue",
+      "officer_name",
+      "subject",
+      "order_amount",
+      "order_date",
+      "clients!hearings_client_id_fkey(business_name)",
+      "clients(business_name)"
+    ],
+    "writeCols": [
+      "client_id",
+      "hearing_type",
+      "subject",
+      "hearing_scheduled_date",
+      "venue",
+      "officer_name",
+      "assigned_to",
+      "id",
+      "updated_at"
+    ],
+    "files": [
+      "lib/actions/hearings.ts",
+      "lib/actions/notices.ts",
+      "lib/repositories/notices.ts",
+      "app/admin/compliance/page.tsx"
+    ]
+  },
+  "leave_requests": {
+    "selectCols": [
+      "id",
+      "user_id",
+      "leave_type",
+      "from_date",
+      "to_date",
+      "number_of_days",
+      "reason",
+      "status",
+      "reviewed_by",
+      "reviewed_at",
+      "review_remarks",
+      "created_at",
+      "users_profile!leave_requests_user_id_fkey(full_name, email)",
+      "users_profile:user_id(full_name)"
+    ],
+    "writeCols": [
+      "user_id",
+      "leave_type",
+      "from_date",
+      "to_date",
+      "number_of_days",
+      "reason",
+      "type",
+      "title",
+      "message",
+      "related_entity_type",
+      "related_entity_id",
+      "reviewed_by",
+      "reviewed_at",
+      "review_remarks"
+    ],
+    "files": [
+      "lib/actions/leave.ts",
+      "lib/repositories/leave.ts",
+      "app/admin/leave/page.tsx"
+    ]
+  },
+  "notices": {
+    "selectCols": [
+      "status",
+      "id",
+      "notice_type",
+      "notice_number",
+      "notice_received_date",
+      "due_date",
+      "subject",
+      "description",
+      "amount_involved",
+      "assigned_to",
+      "users_profile!notices_assigned_to_fkey(full_name)",
+      "client_id",
+      "issuing_authority",
+      "clients!notices_client_id_fkey(business_name)",
+      "notice_date",
+      "clients(business_name)"
+    ],
+    "writeCols": [
+      "updated_at",
+      "clientId",
+      "identifiedBy",
+      "noticeId",
+      "noticeSubject",
+      "amountInvolved",
+      "id",
+      "client_id",
+      "notice_id",
+      "hearing_type",
+      "hearing_scheduled_date",
+      "hearing_held_date",
+      "next_hearing_date"
+    ],
+    "files": [
+      "lib/actions/notices.ts",
+      "lib/repositories/compliance.ts",
+      "lib/repositories/notices.ts",
+      "app/admin/compliance/page.tsx",
+      "app/admin/page.tsx",
+      "app/api/cmdk/search/route.ts"
+    ]
+  },
+  "notifications": {
+    "selectCols": [
+      "id",
+      "user_id",
+      "notification_type",
+      "title",
+      "message",
+      "related_entity_type",
+      "related_entity_id",
+      "is_read",
+      "created_at"
+    ],
+    "writeCols": [
+      "is_read",
+      "read_at",
+      "email_frequency",
+      "user_id",
+      "in_app_enabled",
+      "updated_at",
+      "onConflict",
+      "email_sent",
+      "digests_sent",
+      "recipients"
+    ],
+    "files": [
+      "lib/actions/notifications.ts",
+      "lib/repositories/notifications.ts",
+      "lib/services/notification-service.ts",
+      "app/api/cron/notification-digest/route.ts"
+    ]
+  },
+  "notification_preferences": {
+    "selectCols": [
+      "email_frequency",
+      "in_app_enabled",
+      "user_id"
+    ],
+    "writeCols": [
+      "user_id",
+      "email_frequency",
+      "in_app_enabled",
+      "updated_at",
+      "onConflict",
+      "notification_type",
+      "title",
+      "message",
+      "related_entity_type",
+      "related_entity_id",
+      "send_via_email",
+      "email_sent",
+      "input",
+      "to",
+      "subject",
+      "html"
+    ],
+    "files": [
+      "lib/actions/notifications.ts",
+      "lib/repositories/notifications.ts",
+      "lib/services/notification-service.ts",
+      "app/api/cron/notification-digest/route.ts"
+    ]
+  },
+  "staff_payroll_settings": {
+    "selectCols": [
+      "monthly_salary",
+      "paid_leaves_per_month",
+      "deduction_applicable",
+      "salary_adjustment_for_leaves",
+      "leave_carry_forward_allowed",
+      "max_carry_forward_days",
+      "effective_from",
+      "effective_to"
+    ],
+    "writeCols": [
+      "user_id",
+      "monthly_salary",
+      "paid_leaves_per_month",
+      "deduction_applicable",
+      "salary_adjustment_for_leaves",
+      "updated_at",
+      "onConflict"
+    ],
+    "files": [
+      "lib/actions/payroll.ts",
+      "lib/repositories/payroll.ts"
+    ]
+  },
+  "payroll_runs": {
+    "selectCols": [
+      "id",
+      "user_id",
+      "month",
+      "year",
+      "total_working_days",
+      "actual_present_days",
+      "actual_leave_days",
+      "gross_salary",
+      "total_deductions",
+      "final_salary",
+      "status",
+      "created_at",
+      "users_profile!payroll_runs_user_id_fkey(full_name, email)",
+      "*"
+    ],
+    "writeCols": [
+      "user_id",
+      "month",
+      "year",
+      "total_working_days",
+      "actual_present_days",
+      "actual_leave_days",
+      "paid_leave_days",
+      "unpaid_leave_days",
+      "daily_rate",
+      "base_salary",
+      "salary_for_present_days",
+      "deduction_for_excess_leaves",
+      "total_deductions",
+      "gross_salary",
+      "final_salary",
+      "created_by",
+      "onConflict",
+      "id",
+      "monthly_salary",
+      "paid_leaves_per_month",
+      "deduction_applicable",
+      "salary_adjustment_for_leaves"
+    ],
+    "files": [
+      "lib/actions/payroll.ts",
+      "lib/repositories/payroll.ts"
+    ]
+  },
+  "client_portal_visibility": {
+    "selectCols": [
+      "module_key",
+      "is_enabled"
+    ],
+    "writeCols": [
+      "client_id",
+      "module_key",
+      "is_enabled",
+      "updated_at",
+      "updated_by",
+      "onConflict",
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "details",
+      "performedBy"
+    ],
+    "files": [
+      "lib/actions/portal-visibility.ts",
+      "lib/auth/portal-visibility.ts",
+      "lib/repositories/portal-visibility.ts",
+      "scripts/patch-portal-visibility.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "compliance_insights": {
+    "selectCols": [
+      "raw_value",
+      "benchmark_value",
+      "id",
+      "headline",
+      "narrative",
+      "recommended_action",
+      "created_at",
+      "period_year"
+    ],
+    "writeCols": [
+      "client_id",
+      "insight_type",
+      "period_year",
+      "headline",
+      "narrative",
+      "raw_value",
+      "benchmark_value",
+      "severity",
+      "recommended_action"
+    ],
+    "files": [
+      "lib/actions/projection.ts",
+      "lib/services/insight-service.ts",
+      "lib/services/tax-projection.ts",
+      "app/api/cron/generate-insights/route.ts",
+      "app/portal/projection/page.tsx"
+    ]
+  },
+  "queries": {
+    "selectCols": [
+      "id",
+      "status",
+      "subject",
+      "client_id",
+      "priority",
+      "created_at",
+      "updated_at",
+      "created_by",
+      "assigned_to",
+      "clients!queries_client_id_fkey(business_name)",
+      "creator:users_profile!queries_created_by_fkey(full_name)",
+      "*",
+      "creator:users_profile!queries_created_by_fkey(full_name, email)",
+      "assignee:users_profile!queries_assigned_to_fkey(full_name, email)",
+      "clients(business_name)",
+      "users_profile:created_by(full_name)"
+    ],
+    "writeCols": [
+      "client_id",
+      "user_id",
+      "subject",
+      "description",
+      "id",
+      "query_id",
+      "message",
+      "updated_at",
+      "resolution_notes",
+      "resolved_date",
+      "clientId",
+      "identifiedBy",
+      "queryId"
+    ],
+    "files": [
+      "lib/actions/queries.ts",
+      "lib/repositories/queries.ts",
+      "app/admin/queries/page.tsx"
+    ]
+  },
+  "query_replies": {
+    "selectCols": [],
+    "writeCols": [
+      "query_id",
+      "user_id",
+      "message",
+      "updated_at",
+      "resolution_notes",
+      "resolved_date"
+    ],
+    "files": [
+      "lib/actions/queries.ts"
+    ]
+  },
+  "staff_role_templates": {
+    "selectCols": [
+      "id",
+      "name",
+      "description",
+      "created_at",
+      "updated_at",
+      "is_deleted"
+    ],
+    "writeCols": [
+      "name",
+      "description",
+      "updated_at",
+      "created_by",
+      "template_id",
+      "capability",
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "details",
+      "capability_count",
+      "id",
+      "is_deleted",
+      "user_id",
+      "granted",
+      "capabilities"
+    ],
+    "files": [
+      "lib/actions/role-templates.ts",
+      "lib/repositories/role-templates.ts"
+    ]
+  },
+  "staff_role_template_capabilities": {
+    "selectCols": [
+      "capability",
+      "template_id"
+    ],
+    "writeCols": [
+      "user_id",
+      "capabilities",
+      "active_role_template_id",
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "details",
+      "template_id",
+      "capability_count"
+    ],
+    "files": [
+      "lib/actions/role-templates.ts",
+      "lib/repositories/role-templates.ts"
+    ]
+  },
+  "saved_views": {
+    "selectCols": [
+      "id",
+      "name",
+      "is_default",
+      "filters"
+    ],
+    "writeCols": [
+      "is_default",
+      "user_id",
+      "onConflict",
+      "id",
+      "ascending"
+    ],
+    "files": [
+      "lib/actions/saved-views.ts"
+    ]
+  },
+  "services": {
+    "selectCols": [
+      "id",
+      "code",
+      "name",
+      "description",
+      "category_id",
+      "service_categories(name)",
+      "service_kind"
+    ],
+    "writeCols": [
+      "updated_at",
+      "id",
+      "is_deleted",
+      "service_id",
+      "name",
+      "code",
+      "description",
+      "frequency",
+      "due_day_of_month",
+      "is_recurring",
+      "requires_client_input",
+      "requires_verification",
+      "is_active",
+      "service_kind",
+      "category_id",
+      "step_order",
+      "title",
+      "is_required"
+    ],
+    "files": [
+      "lib/actions/services-catalogue.ts",
+      "lib/repositories/services.ts",
+      "scripts/fix-service-kinds.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "sub_services": {
+    "selectCols": [
+      "id",
+      "code",
+      "name",
+      "frequency",
+      "due_day_of_month",
+      "is_billable",
+      "is_recurring",
+      "requires_client_input",
+      "is_active",
+      "service_id",
+      "services(code, name)",
+      "requires_verification"
+    ],
+    "writeCols": [
+      "updated_at",
+      "id",
+      "is_deleted",
+      "is_active",
+      "sub_service_id",
+      "step_order",
+      "title",
+      "description",
+      "is_required",
+      "service_id",
+      "name",
+      "code",
+      "frequency",
+      "due_day_of_month",
+      "is_recurring",
+      "requires_client_input"
+    ],
+    "files": [
+      "lib/actions/services-catalogue.ts",
+      "lib/repositories/services.ts",
+      "lib/repositories/task-custom-fields.ts",
+      "lib/repositories/tasks.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "sub_service_sop_steps": {
+    "selectCols": [
+      "id",
+      "sub_service_id",
+      "step_order",
+      "title",
+      "description",
+      "is_required"
+    ],
+    "writeCols": [
+      "updated_at",
+      "id",
+      "is_deleted",
+      "sub_service_id",
+      "step_order",
+      "client_id",
+      "is_active",
+      "service_id"
+    ],
+    "files": [
+      "lib/actions/services-catalogue.ts",
+      "lib/repositories/sop.ts",
+      "lib/services/task-steps-service.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "client_sub_services": {
+    "selectCols": [
+      "id",
+      "sub_service_id",
+      "sub_services(id, code, name, frequency, services(name))",
+      "is_active",
+      "sub_services(id, code, name, frequency, service_id, services(code, name))",
+      "client_id",
+      "fee_amount",
+      "clients!client_sub_services_client_id_fkey(id, business_name, group_id, client_groups!clients_group_id_fkey(name))",
+      "sub_services!client_sub_services_sub_service_id_fkey(name, code, services!sub_services_service_id_fkey(name))",
+      "sub_services(id, code, name, frequency, due_day_of_month, due_day_of_quarter, due_month, is_recurring)"
+    ],
+    "writeCols": [
+      "is_active",
+      "id",
+      "client_id",
+      "sub_service_id",
+      "service_id",
+      "title",
+      "description",
+      "is_blocked_on_client",
+      "priority"
+    ],
+    "files": [
+      "lib/actions/services.ts",
+      "lib/repositories/client-sub-services.ts",
+      "lib/repositories/services.ts",
+      "app/admin/reports/client-services/page.tsx",
+      "app/admin/reports/group-wise/page.tsx",
+      "app/admin/reports/service-wise/page.tsx",
+      "app/api/cron/generate-monthly-tasks/route.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "client_services": {
+    "selectCols": [
+      "id",
+      "service_id",
+      "services!inner(code)",
+      "services(service_kind)",
+      "is_active",
+      "access_level",
+      "start_date",
+      "end_date",
+      "service_head_id",
+      "services(id, code, name, category_id)",
+      "users_profile(full_name, email)"
+    ],
+    "writeCols": [
+      "client_id",
+      "service_id",
+      "access_level",
+      "service_head_id",
+      "start_date",
+      "is_active",
+      "id",
+      "updated_at",
+      "sub_service_id",
+      "title",
+      "description",
+      "is_blocked_on_client",
+      "priority",
+      "due_date",
+      "period_year",
+      "period_month",
+      "assigned_to"
+    ],
+    "files": [
+      "lib/actions/services.ts",
+      "lib/auth/portal-visibility.ts",
+      "lib/auth/service-applicability.ts",
+      "lib/repositories/services.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "staff_capabilities": {
+    "selectCols": [
+      "id",
+      "capability",
+      "revoked_at"
+    ],
+    "writeCols": [
+      "revoked_at",
+      "revoked_by",
+      "granted_at",
+      "granted_by",
+      "user_id",
+      "capability",
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "details",
+      "type",
+      "title",
+      "message",
+      "granted",
+      "revoked"
+    ],
+    "files": [
+      "lib/actions/staff-capabilities.ts",
+      "lib/auth/require-capability.ts",
+      "lib/repositories/staff-capabilities.ts"
+    ]
+  },
+  "task_custom_field_definitions": {
+    "selectCols": [
+      "id",
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/task-custom-fields.ts",
+      "lib/repositories/task-custom-fields.ts"
+    ]
+  },
+  "task_custom_field_values": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [
+      "updated_at",
+      "onConflict",
+      "code",
+      "display_name",
+      "color_hex"
+    ],
+    "files": [
+      "lib/actions/task-custom-fields.ts",
+      "lib/repositories/task-custom-fields.ts"
+    ]
+  },
+  "task_labels": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [
+      "is_active",
+      "task_id",
+      "label_code",
+      "assigned",
+      "onConflict"
+    ],
+    "files": [
+      "lib/actions/task-custom-fields.ts",
+      "lib/repositories/task-custom-fields.ts"
+    ]
+  },
+  "task_label_assignments": {
+    "selectCols": [
+      "label_code"
+    ],
+    "writeCols": [
+      "task_id",
+      "label_code",
+      "onConflict"
+    ],
+    "files": [
+      "lib/actions/task-custom-fields.ts",
+      "lib/repositories/task-custom-fields.ts"
+    ]
+  },
+  "task_steps": {
+    "selectCols": [
+      "completed_at",
+      "completed_by",
+      "step_order",
+      "id",
+      "task_id",
+      "title",
+      "description",
+      "is_required",
+      "completion_note",
+      "source_sop_step_id",
+      "users_profile(full_name)",
+      "users_profile:completed_by(full_name, email)"
+    ],
+    "writeCols": [
+      "task_id",
+      "action",
+      "field_name",
+      "new_value",
+      "changed_by",
+      "title",
+      "id",
+      "ascending",
+      "step_order",
+      "is_required",
+      "source_sop_step_id",
+      "step_id",
+      "description",
+      "step_ids"
+    ],
+    "files": [
+      "lib/actions/task-steps.ts",
+      "lib/repositories/sop.ts",
+      "lib/repositories/task-steps.ts",
+      "lib/repositories/tasks.ts",
+      "lib/services/task-steps-service.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "task_templates": {
+    "selectCols": [
+      "id",
+      "sub_service_id",
+      "title",
+      "description",
+      "frequency",
+      "due_day_of_month",
+      "estimated_days",
+      "default_assignee_id",
+      "default_reviewer_id",
+      "is_active",
+      "created_at",
+      "*"
+    ],
+    "writeCols": [
+      "is_deleted",
+      "updated_at",
+      "id",
+      "task_template_id",
+      "step_order",
+      "title",
+      "description",
+      "is_required",
+      "guidance_notes"
+    ],
+    "files": [
+      "lib/actions/task-templates.ts",
+      "lib/repositories/task-templates.ts"
+    ]
+  },
+  "task_template_steps": {
+    "selectCols": [
+      "id",
+      "task_template_id",
+      "step_order",
+      "title",
+      "description",
+      "is_required",
+      "guidance_notes"
+    ],
+    "writeCols": [
+      "is_deleted",
+      "updated_at",
+      "task_template_id",
+      "step_order"
+    ],
+    "files": [
+      "lib/actions/task-templates.ts",
+      "lib/repositories/task-templates.ts",
+      "lib/services/task-steps-service.ts"
+    ]
+  },
+  "vcfo_snapshots": {
+    "selectCols": [
+      "monthly_burn",
+      "id",
+      "month",
+      "year",
+      "cash_in_bank",
+      "revenue",
+      "key_expenses",
+      "budgeted_revenue",
+      "budgeted_expenses",
+      "actual_revenue",
+      "actual_expenses",
+      "advisor_notes",
+      "updated_at",
+      "client_id",
+      "clients(business_name)"
+    ],
+    "writeCols": [
+      "data_entered_by",
+      "updated_at",
+      "onConflict",
+      "clientId",
+      "identifiedBy",
+      "snapshotId",
+      "id"
+    ],
+    "files": [
+      "lib/actions/vcfo.ts",
+      "lib/repositories/vcfo.ts",
+      "app/admin/vcfo/page.tsx",
+      "app/portal/vcfo/page.tsx"
+    ]
+  },
+  "solution_log": {
+    "selectCols": [
+      "id",
+      "issue_identified_date",
+      "issue_description",
+      "issue_category",
+      "root_cause",
+      "financial_impact_estimate",
+      "recommended_solution",
+      "solution_status",
+      "actual_outcome",
+      "implementation_date",
+      "actual_financial_impact",
+      "created_at"
+    ],
+    "writeCols": [
+      "identified_by",
+      "solution_status",
+      "id",
+      "updated_at",
+      "client_id",
+      "issue_identified_date",
+      "issue_description",
+      "issue_category",
+      "recommended_solution",
+      "actual_outcome",
+      "financial_impact_estimate",
+      "actual_financial_impact",
+      "implementation_date",
+      "implemented_by",
+      "clientId",
+      "identifiedBy",
+      "description",
+      "category",
+      "recommendedSolution",
+      "actualOutcome",
+      "actualFinancialImpact"
+    ],
+    "files": [
+      "lib/actions/vcfo.ts",
+      "lib/repositories/vcfo.ts",
+      "lib/services/solution-log-service.ts",
+      "app/portal/vcfo/solution-log/page.tsx"
+    ]
+  },
+  "task_workdone": {
+    "selectCols": [
+      "id",
+      "user_id",
+      "task_id",
+      "*",
+      "users_profile!task_workdone_user_id_fkey(full_name)",
+      "tasks(title)",
+      "clients(business_name)",
+      "client_id",
+      "duration_minutes"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/actions/workdone.ts",
+      "lib/repositories/workdone.ts"
+    ]
+  },
+  "global_audit_log": {
+    "selectCols": [
+      "id",
+      "action",
+      "entity_type",
+      "entity_id",
+      "details",
+      "performed_at",
+      "performed_by:users_profile!global_audit_log_performed_by_fkey(full_name, email)",
+      "performed_by",
+      "users_profile(full_name, email)"
+    ],
+    "writeCols": [
+      "action",
+      "entity_type",
+      "entity_id",
+      "performed_by",
+      "details"
+    ],
+    "files": [
+      "lib/repositories/audit.ts",
+      "lib/repositories/bizlens.ts",
+      "lib/services/audit-service.ts",
+      "app/admin/audit/page.tsx"
+    ]
+  },
+  "bizlens_period_snapshots": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/bizlens-snapshots.ts"
+    ]
+  },
+  "bizlens_data": {
+    "selectCols": [
+      "*",
+      "id",
+      "client_id",
+      "period_month",
+      "period_year",
+      "status"
+    ],
+    "writeCols": [
+      "updates",
+      "updated_at"
+    ],
+    "files": [
+      "lib/repositories/bizlens.ts",
+      "app/admin/bizlens/page.tsx",
+      "scripts/migrate-bizlens.ts"
+    ]
+  },
+  "client_groups": {
+    "selectCols": [
+      "id",
+      "name",
+      "description"
+    ],
+    "writeCols": [
+      "is_deleted",
+      "name",
+      "description",
+      "onConflict",
+      "business_name",
+      "category",
+      "pan",
+      "gstin",
+      "group_id",
+      "primary_owner_id",
+      "lifecycle_stage",
+      "portal_enabled",
+      "notes",
+      "client_id",
+      "user_id",
+      "role_in_client",
+      "is_active"
+    ],
+    "files": [
+      "lib/repositories/clients.ts",
+      "app/admin/reports/client-services/page.tsx",
+      "app/admin/tasks/bulk-create/page.tsx",
+      "scripts/seed-rollback.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "team_client_assignment": {
+    "selectCols": [
+      "id",
+      "role",
+      "assigned_from",
+      "assigned_to",
+      "team_user_id",
+      "users_profile!team_client_assignment_team_user_id_fkey(id, full_name, email)"
+    ],
+    "writeCols": [
+      "assigned_to",
+      "name",
+      "payload",
+      "is_deleted",
+      "client_id",
+      "team_user_id",
+      "role",
+      "assigned_from",
+      "module_key",
+      "is_enabled",
+      "updated_by",
+      "onConflict"
+    ],
+    "files": [
+      "lib/repositories/clients.ts",
+      "scripts/seed-rollback.ts",
+      "scripts/seed.ts"
+    ]
+  },
+  "compliance_calendar_events": {
+    "selectCols": [
+      "id",
+      "rule_id",
+      "rule_code",
+      "period_label",
+      "due_date",
+      "status",
+      "task_id",
+      "compliance_calendar_rules(display_name, service_kind)",
+      "tasks(status, is_stuck)",
+      "client_id",
+      "clients(business_name, gstin)",
+      "clients!compliance_calendar_events_client_id_fkey(business_name)",
+      "compliance_calendar_rules!compliance_calendar_events_rule_id_fkey(service_kind)",
+      "clients(business_name)"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/compliance-dashboard.ts",
+      "lib/repositories/compliance.ts",
+      "lib/services/compliance-calendar-engine.ts",
+      "app/admin/compliance/page.tsx",
+      "app/admin/page.tsx"
+    ]
+  },
+  "gst_filings": {
+    "selectCols": [
+      "id",
+      "return_type",
+      "period_year",
+      "period_month",
+      "status",
+      "filed_date",
+      "ack_number",
+      "taxable_turnover",
+      "output_tax_total",
+      "itc_claimed",
+      "net_tax_payable",
+      "late_fee",
+      "interest_amount",
+      "is_current",
+      "change_reason",
+      "updated_at"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/compliance.ts"
+    ]
+  },
+  "tds_filings": {
+    "selectCols": [
+      "id",
+      "period_quarter",
+      "period_year",
+      "status",
+      "filed_date",
+      "ack_number",
+      "total_deductions",
+      "tax_deposited",
+      "deductee_count",
+      "is_current",
+      "change_reason"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/compliance.ts",
+      "lib/services/insight-service.ts"
+    ]
+  },
+  "it_filings": {
+    "selectCols": [
+      "id",
+      "fy_ending_year",
+      "status",
+      "filed_date",
+      "ack_number",
+      "gross_income",
+      "deductions_claimed",
+      "taxable_income",
+      "tax_liability",
+      "refund_amount",
+      "is_current",
+      "change_reason"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/compliance.ts"
+    ]
+  },
+  "compliance_status": {
+    "selectCols": [
+      "id",
+      "client_id",
+      "filing_type",
+      "period_identifier",
+      "status",
+      "due_date",
+      "filed_date",
+      "ack_number",
+      "days_to_deadline",
+      "is_overdue",
+      "updated_at",
+      "clients!compliance_status_client_id_fkey(business_name)"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/compliance.ts",
+      "lib/services/insight-service.ts",
+      "app/admin/page.tsx"
+    ]
+  },
+  "income_tax_slabs": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/income-tax.ts"
+    ]
+  },
+  "query_messages": {
+    "selectCols": [
+      "id",
+      "message_text",
+      "created_at",
+      "sender_id",
+      "users_profile!query_messages_sender_id_fkey(full_name, email, role)"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/queries.ts"
+    ]
+  },
+  "service_categories": {
+    "selectCols": [
+      "id",
+      "name",
+      "description",
+      "display_order"
+    ],
+    "writeCols": [
+      "name",
+      "description",
+      "display_order",
+      "category_id",
+      "code",
+      "service_kind",
+      "service_id"
+    ],
+    "files": [
+      "lib/repositories/services.ts",
+      "scripts/seed-c-demo.ts"
+    ]
+  },
+  "task_notes": {
+    "selectCols": [
+      "id",
+      "note_text",
+      "created_at",
+      "users_profile!task_notes_created_by_fkey(full_name, email, role)",
+      "is_required",
+      "completed_at"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/tasks.ts"
+    ]
+  },
+  "work_done": {
+    "selectCols": [
+      "*",
+      "tasks!work_done_task_id_fkey(title)",
+      "clients!work_done_client_id_fkey(business_name)"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/repositories/work-done.ts"
+    ]
+  },
+  "gst_data_entries": {
+    "selectCols": [
+      "input_tax_2b",
+      "itc_books",
+      "turnover",
+      "output_tax_cgst",
+      "output_tax_sgst",
+      "output_tax_igst"
+    ],
+    "writeCols": [],
+    "files": [
+      "lib/services/insight-service.ts"
+    ]
+  },
+  "dsc": {
+    "selectCols": [
+      "id",
+      "holder_name",
+      "expiry_date",
+      "clients!dsc_client_id_fkey(business_name)"
+    ],
+    "writeCols": [],
+    "files": [
+      "app/admin/compliance/page.tsx"
+    ]
+  },
+  "financial_data": {
+    "selectCols": [
+      "*"
+    ],
+    "writeCols": [],
+    "files": [
+      "scripts/migrate-bizlens.ts"
+    ]
+  }
+}
