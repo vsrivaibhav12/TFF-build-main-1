@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizLens — Financial Intelligence for Business Leaders</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink: #0f172a;
+            --ink-mid: #334155;
+            --ink-muted: #475569;
+            --ink-light: #94a3b8;
+            --blue: #2563eb;
+            --blue-deep: #1e40af;
+            --blue-glow: #3b82f6;
+            --blue-pale: #eff6ff;
+            --surface: #ffffff;
+            --surface-warm: #f8fafc;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --dark: #0f172a;
+            --dark-card: #1e293b;
+            --red-soft: #fef2f2;
+            --red-icon: #ef4444;
+            --amber-soft: #fffbeb;
+            --amber-icon: #f59e0b;
+            --green-soft: #f0fdf4;
+            --green-icon: #22c55e;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ink);
+            background: #cbd5e1;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── A4 Page ── */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: var(--surface);
+            margin: 10mm auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+
+        .page-inner {
+            padding: 16mm 20mm 22mm 20mm;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* ── Print ── */
+        @page { size: A4 portrait; margin: 0; }
+
+        @media print {
+            html, body { width: 210mm; background: white; margin: 0; padding: 0 !important; }
+            .print-bar { display: none !important; }
+            .page {
+                width: 210mm; height: 297mm; margin: 0; box-shadow: none;
+                page-break-after: always; page-break-inside: avoid;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            .page:last-child { page-break-after: auto; }
+        }
+
+        /* ── Print Bar ── */
+        .print-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: var(--dark); padding: 12px 28px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .print-bar-brand { font-family: 'DM Serif Display', serif; color: white; font-size: 1.05rem; }
+        .print-bar-brand span { color: var(--blue-glow); }
+        .print-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 24px; background: var(--blue); color: white; border: none;
+            border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .print-btn:hover { background: var(--blue-deep); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+        .print-btn svg { width: 16px; height: 16px; }
+        .print-note { color: var(--ink-light); font-size: 0.72rem; line-height: 1.4; text-align: right; }
+        .print-note strong { color: #cbd5e1; }
+        body { padding-top: 60px; }
+
+        /* ── Typography ── */
+        .display-heading {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.3rem; line-height: 1.15; color: var(--ink);
+            letter-spacing: -0.02em; margin-bottom: 10px;
+        }
+        .display-heading .accent { color: var(--blue); }
+
+        .section-heading {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem; line-height: 1.2; color: var(--ink); margin-bottom: 8px;
+        }
+
+        .card-heading {
+            font-size: 1.02rem; font-weight: 700; color: var(--blue-deep);
+            margin-bottom: 5px; letter-spacing: -0.01em;
+        }
+
+        .body-text { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.6; }
+        .body-text + .body-text { margin-top: 8px; }
+        .body-sm { font-size: 0.78rem; color: var(--ink-light); line-height: 1.55; }
+
+        .hook-text {
+            font-size: 1.05rem; color: var(--ink-muted); font-weight: 300; line-height: 1.5;
+            max-width: 460px;
+        }
+
+        /* ── Step Tag ── */
+        .step-tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 11px; background: var(--blue-pale); color: var(--blue-deep);
+            border-radius: 100px; font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px;
+        }
+        .step-tag::before { content: ''; width: 5px; height: 5px; background: var(--blue); border-radius: 50%; }
+
+        /* ── Image Frame ── */
+        .img-frame {
+            width: 100%; border-radius: 8px; overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            background: var(--surface-warm);
+        }
+        .img-frame img { width: 100%; height: auto; display: block; }
+        .img-frame-dark { border-color: #334155; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+        /* ── Grid ── */
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+        .split-text-first { grid-template-columns: 1.05fr 0.95fr; }
+        .split-img-first  { grid-template-columns: 0.95fr 1.05fr; }
+
+        /* ── Service Box ── */
+        .service-callout {
+            background: var(--surface-warm); border-left: 3px solid var(--blue);
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 22px;
+        }
+        .service-callout h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem; color: var(--ink); margin-bottom: 6px;
+        }
+        .service-callout .body-text strong { color: var(--ink); }
+
+        /* ── Stat Cards (Cost of Not Knowing) ── */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .stat-card-header {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+
+        .stat-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem;
+        }
+        .stat-icon-green { background: var(--green-soft); color: var(--green-icon); }
+        .stat-icon-amber { background: var(--amber-soft); color: var(--amber-icon); }
+        .stat-icon-red   { background: var(--red-soft);   color: var(--red-icon);   }
+
+        .stat-number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.45rem; color: var(--ink); letter-spacing: -0.02em;
+        }
+
+        .stat-label { font-size: 0.7rem; color: var(--ink-light); font-weight: 500; }
+
+        .stat-card .stat-body {
+            font-size: 0.76rem; font-weight: 600; color: var(--ink-mid);
+            line-height: 1.45; margin-bottom: 6px;
+        }
+
+        .stat-card .stat-detail {
+            font-size: 0.72rem; color: var(--ink-light); line-height: 1.45;
+            font-style: italic;
+        }
+
+        .stat-card .stat-source {
+            font-size: 0.65rem; color: #cbd5e1; margin-top: 8px; font-weight: 500;
+        }
+
+        /* ── Dark Section ── */
+        .dark-section {
+            background: var(--dark); color: white;
+            padding: 20px 20px 16px; border-radius: 10px;
+            position: relative; overflow: hidden;
+        }
+        .dark-section::before {
+            content: ''; position: absolute; top: -60px; right: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .dark-section .step-tag { background: var(--dark-card); color: var(--blue-glow); }
+        .dark-section .step-tag::before { background: var(--blue-glow); }
+        .dark-section .section-heading { color: white; font-size: 1.4rem; }
+        .dark-section .body-text { color: #cbd5e1; }
+        .dark-section .fine-print { font-size: 0.72rem; color: #64748b; margin-top: 10px; font-style: italic; }
+
+        /* ── CTA Box ── */
+        .cta-box {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+            color: white; padding: 20px 20px; border-radius: 10px;
+            position: relative; overflow: hidden;
+        }
+        .cta-box::after {
+            content: ''; position: absolute; bottom: -30px; right: -30px;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-box h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: white; margin-bottom: 6px; }
+        .cta-box .body-text { color: rgba(255,255,255,0.85); font-size: 0.82rem; }
+        .cta-box .contact-block { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.15); }
+        .cta-box .contact-label { display: block; color: rgba(255,255,255,0.5); font-weight: 500; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+        .cta-box .contact-line { font-size: 0.95rem; color: white; font-weight: 600; letter-spacing: 0.02em; }
+
+        /* ── Centered Intro ── */
+        .centered-intro { text-align: center; max-width: 440px; margin: 0 auto; }
+
+        /* ── Footer ── */
+        .page-footer {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 8px 20mm; display: flex; justify-content: space-between;
+            align-items: center; font-size: 0.65rem; color: var(--ink-light);
+            border-top: 1px solid var(--border); background: white;
+        }
+        .page-footer .firm-name { font-weight: 600; color: var(--ink-muted); }
+
+        /* ── Logo ── */
+        .logo-mark { display: flex; justify-content: center; margin-bottom: 24px; }
+        .logo-mark img { height: 36px; width: auto; }
+
+        /* ── Decorative ── */
+        .accent-line { width: 40px; height: 3px; background: var(--blue); border-radius: 4px; margin-bottom: 12px; }
+        .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+        /* ── Spacers ── */
+        .sp-4  { height: 4px; }
+        .sp-8  { height: 8px; }
+        .sp-12 { height: 12px; }
+        .sp-16 { height: 16px; }
+        .sp-20 { height: 20px; }
+        .sp-24 { height: 24px; }
+
+        @media screen and (max-width: 800px) {
+            .page { width: 100%; height: auto; margin: 0; }
+            .split, .stat-grid { grid-template-columns: 1fr; gap: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Print Bar -->
+<div class="print-bar">
+    <div class="print-bar-brand">Biz<span>Lens</span> — Pamphlet Preview</div>
+    <div style="display:flex; align-items:center; gap:18px;">
+        <div class="print-note">
+            <strong>Settings:</strong> A4 · Margins: None · Background graphics ✓<br>
+            Uncheck "Headers and footers"
+        </div>
+        <button class="print-btn" onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18.75 7.134H5.25"/></svg>
+            Print to PDF
+        </button>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 — HOOK + WHY ANALYTICS + DONE-FOR-YOU
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+
+        <div class="logo-mark">
+            <img src="Bizlens Logo.PNG" alt="BizLens" onerror="this.style.display='none'">
+        </div>
+
+        <!-- Hero -->
+        <div style="margin-bottom: 20px;">
+            <div class="display-heading">
+                Your accounting software<br>tells you what happened.<br>
+                <span class="accent">We tell you why —<br>and what to do next.</span>
+            </div>
+            <div class="sp-8"></div>
+            <p class="hook-text">Move from staring at raw numbers to making board-ready decisions. We handle the data. You get the direction.</p>
+        </div>
+
+        <!-- The Cost of Not Knowing -->
+        <div style="margin-bottom: 20px;">
+            <div class="section-heading" style="font-size: 1.3rem; margin-bottom: 4px;">The Cost of Not Knowing</div>
+            <p class="body-sm" style="max-width: 500px; margin-bottom: 14px;">Most businesses don't fail from big disasters. They bleed slowly — from gut feel and delayed visibility.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon stat-icon-green">📈</div>
+                        <div>
+                            <div class="stat-number">~23%</div>
+                            <div class="stat-label">more profitable</div>
+                        </div>
+                    </div>
+                    <div class="stat-body">Data-driven businesses outperform peers by 20–25%.</div>
+                    <div class="stat-detail">If your profit is ₹10L, you're leaving ₹2–2.5L on the table.</div>
+                    <div class="stat-source">— McKinsey</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon stat-icon-amber">👁</div>
+                        <div>
+                            <div class="stat-number">15–25%</div>
+                            <div class="stat-label">revenue lost</div>
+                        </div>
+                    </div>
+                    <div class="stat-body">Poor data visibility bleeds up to a quarter of revenue.</div>
+                    <div class="stat-detail">For a ₹1Cr business, that's ₹15–25L annually — untracked leakages.</div>
+                    <div class="stat-source">— Gartner</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon stat-icon-red">⚠</div>
+                        <div>
+                            <div class="stat-number">70%</div>
+                            <div class="stat-label">of failures</div>
+                        </div>
+                    </div>
+                    <div class="stat-body">Businesses fail because owners see problems too late.</div>
+                    <div class="stat-detail">Not competition. Not GST. It's late visibility.</div>
+                    <div class="stat-source">— Industry Research</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Done-For-You -->
+        <div class="service-callout">
+            <h2>The "Done-For-You" Intelligence Service</h2>
+            <p class="body-text">You run the business. We run the numbers. We take your raw data — straight from Tally, spreadsheets, or standard ledgers — clean it, structure it, and run it through our proprietary BizLens engine.</p>
+            <p class="body-text"><strong>The result?</strong> A crystal-clear, executive-level view of your business — delivered directly to you.</p>
+        </div>
+
+    </div>
+    <div class="page-footer">
+        <span class="firm-name">The Fiscal Fulcrum LLP</span>
+        <span>Expert Financial Advisory · Coimbatore, TN</span>
+        <span>1 / 4</span>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 2 — INPUTS + OPERATING + HEALTH
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+
+        <!-- Step 1: Inputs -->
+        <div class="split split-text-first" style="margin-bottom: 28px;">
+            <div>
+                <div class="step-tag">Step 1 — The Foundation</div>
+                <div class="card-heading">Clean, Standardized Inputs</div>
+                <p class="body-text">We work with your team to securely gather your period data — sales, variable costs, fixed overheads, and industry benchmarks. Everything is validated before the analysis begins.</p>
+            </div>
+            <div class="img-frame">
+                <img src="Input_1.PNG" alt="BizLens Input Screen">
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Step 2: Operating Performance -->
+        <div class="split split-img-first" style="margin-bottom: 28px;">
+            <div class="img-frame">
+                <img src="Operating_2.PNG" alt="Operating Performance Dashboard">
+            </div>
+            <div>
+                <div class="step-tag">Step 2 — The Reality Check</div>
+                <div class="card-heading">Operating Performance</div>
+                <p class="body-text">Where does your business actually stand this month? We break down your core profitability — your No-Profit/No-Loss point, Contribution Margin, and exactly what is eating into your overheads.</p>
+                <p class="body-text">No jargon. Just clarity on what's working.</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Step 3: Health -->
+        <div>
+            <div class="centered-intro" style="margin-bottom: 14px;">
+                <div class="step-tag">Step 3 — Risk Management</div>
+                <div class="section-heading" style="font-size: 1.35rem;">Business Health Diagnostics</div>
+                <p class="body-text">Growth is great, but survival is mandatory. We diagnose your business across critical pillars to spot risks before they become real problems.</p>
+            </div>
+
+            <div class="split split-img-first">
+                <div class="img-frame">
+                    <img src="Health_1.PNG" alt="Liquidity and Cash Runway">
+                </div>
+                <div>
+                    <div class="card-heading">Liquidity & Discipline</div>
+                    <p class="body-text">We calculate your exact cash runway and flag high-risk receivables. Our traffic-light system shows you where your cash is trapped — and whether collection discipline needs immediate attention.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="page-footer">
+        <span class="firm-name">The Fiscal Fulcrum LLP</span>
+        <span>Expert Financial Advisory · Coimbatore, TN</span>
+        <span>2 / 4</span>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 3 — INSIGHTS + SCENARIO SIMULATOR
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+
+        <!-- Step 4: Insights -->
+        <div class="split split-text-first" style="margin-bottom: 30px;">
+            <div>
+                <div class="step-tag">Step 4 — Strategic Clarity</div>
+                <div class="card-heading">Deep-Dive Insights</div>
+                <p class="body-text">We translate raw numbers into human reality. We show you exactly which day of the month your profit actually starts — your Break-Even in Days.</p>
+                <p class="body-text">We also map your complete Working Capital Cycle, showing how to free up cash by collecting or paying just a few days differently.</p>
+            </div>
+            <div class="img-frame">
+                <img src="Insights_1.PNG" alt="Break-Even in Days">
+            </div>
+        </div>
+
+        <!-- Step 5: Scenario Simulator -->
+        <div class="dark-section">
+            <div class="step-tag">Step 5 — Future Proofing</div>
+            <div class="section-heading">Scenario Simulator</div>
+            <p class="body-text" style="margin-bottom: 14px;">Don't just analyze the past — test the future before risking your capital. Tell us your target profit, and we calculate the exact changes needed in sales or costs to get there.</p>
+
+            <div class="split" style="gap: 12px;">
+                <div class="img-frame img-frame-dark">
+                    <img src="Scenario_1.PNG" alt="Optimum Paths">
+                </div>
+                <div class="img-frame img-frame-dark">
+                    <img src="Scenario_4.PNG" alt="Monte Carlo Simulation">
+                </div>
+            </div>
+
+            <p class="fine-print">We run 1,000 randomized Monte Carlo iterations to give you the mathematical probability of your best-case and worst-case scenarios.</p>
+        </div>
+
+    </div>
+    <div class="page-footer">
+        <span class="firm-name">The Fiscal Fulcrum LLP</span>
+        <span>Expert Financial Advisory · Coimbatore, TN</span>
+        <span>3 / 4</span>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 4 — SUMMARY + REPORT + CTA
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-inner">
+
+        <div class="centered-intro" style="margin-bottom: 16px;">
+            <div class="accent-line" style="margin: 0 auto 12px;"></div>
+            <div class="section-heading">The Final Deliverable</div>
+            <p class="body-text">You don't just get a dashboard. You receive a complete, board-ready Executive Summary — your Strengths, Threats, and a step-by-step Priority Action Plan.</p>
+        </div>
+
+        <div class="img-frame" style="margin-bottom: 22px;">
+            <img src="Summary_1.PNG" alt="Executive Summary">
+        </div>
+
+        <div class="split" style="gap: 22px; align-items: stretch;">
+            <div style="padding: 2px 0;">
+                <div class="card-heading" style="color: var(--ink); font-size: 1.08rem;">The Monthly PDF Report</div>
+                <div class="sp-8"></div>
+                <p class="body-text">Every period, we deliver a pristine, comprehensive PDF report — all our findings, visual charts, and strategic recommendations in one document.</p>
+                <p class="body-text">Perfect for stakeholder meetings, board presentations, or simply your own peace of mind.</p>
+            </div>
+
+            <div class="cta-box">
+                <h3>Ready to see your business clearly?</h3>
+                <div class="sp-8"></div>
+                <p class="body-text">Stop guessing with your financials. Let us handle the data work so you can focus on building the business.</p>
+                <div class="sp-4"></div>
+                <p class="body-text" style="color: white; font-weight: 600; font-size: 0.95rem;">Let's talk about your numbers.</p>
+                <div class="contact-block">
+                    <span class="contact-label">Call us</span>
+                    <div class="contact-line">+91 70103 41301</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="page-footer">
+        <span class="firm-name">The Fiscal Fulcrum LLP</span>
+        <span>Expert Financial Advisory · Coimbatore, TN</span>
+        <span>4 / 4</span>
+    </div>
+</div>
+
+</body>
+</html>

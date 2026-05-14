@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000" />
+  <title>BizLens — Financial Intelligence</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    if (!window.jspdf) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"><\/script>');
+    }
+  </script>
+  </head>
+<body>
+  <div id="loadingOverlay" class="loading-overlay"><div class="loading-spinner"></div><div class="loading-text">Loading...</div></div>
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header"><div class="h">Settings</div><button class="modal-close" id="closeSettings">&times;</button></div>
+      <div class="modal-body">
+        <div class="h sub">Risk Thresholds</div>
+        <p class="muted small mb12">Industry-standard thresholds for financial health indicators</p>
+        <div class="settings-grid">
+          <div class="setting-group">
+            <label>Cash Runway (months)</label>
+            <div class="setting-row"><span>Critical below:</span><input type="number" id="thrCashHigh" value="3"></div>
+            <div class="setting-row"><span>Healthy above:</span><input type="number" id="thrCashGood" value="6"></div>
+          </div>
+          <div class="setting-group">
+            <label>Debt-Equity Ratio</label>
+            <div class="setting-row"><span>Low risk below:</span><input type="number" id="thrDEHigh" value="1" step="0.1"></div>
+            <div class="setting-row"><span>High risk above:</span><input type="number" id="thrDELow" value="2" step="0.1"></div>
+          </div>
+          <div class="setting-group">
+            <label>Interest Coverage (ICR)</label>
+            <div class="setting-row"><span>Critical below:</span><input type="number" id="thrICRHigh" value="1.5" step="0.1"></div>
+            <div class="setting-row"><span>Comfortable above:</span><input type="number" id="thrICRLow" value="3" step="0.1"></div>
+          </div>
+          <div class="setting-group">
+            <label>Concentration %</label>
+            <div class="setting-row"><span>High risk above:</span><input type="number" id="thrConcHigh" value="50"></div>
+            <div class="setting-row"><span>Moderate above:</span><input type="number" id="thrConcMed" value="30"></div>
+          </div>
+          <div class="setting-group">
+            <label>WC/Sales %</label>
+            <div class="setting-row"><span>High above:</span><input type="number" id="thrWCSalesHigh" value="40"></div>
+            <div class="setting-row"><span>Moderate above:</span><input type="number" id="thrWCSalesMed" value="25"></div>
+          </div>
+        </div>
+        <div class="hr mt14"></div>
+        <div class="h sub">Data</div>
+        <div class="actions-inline mt12">
+          <button id="exportAllData" class="btn btn-ghost">Export JSON</button>
+          <label class="btn btn-ghost file-label">Import<input type="file" id="importDataFile" accept=".json" style="display:none;"></label>
+        </div>
+      </div>
+      <div class="modal-footer"><button id="resetThresholds" class="btn btn-ghost">Reset</button><button id="saveSettings" class="btn">Save</button></div>
+    </div>
+  </div>
+
+  <div id="compareScenariosModal" class="modal" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-lg">
+      <div class="modal-header"><div class="h">Compare Scenarios</div><button class="modal-close" id="closeCompareScenarios">&times;</button></div>
+      <div class="modal-body">
+        <div id="compareNoScenarios" class="empty-state" style="display:none;">
+          <div class="empty-icon">📊</div>
+          <div class="h">No Saved Scenarios</div>
+          <div class="muted">Save scenarios from the simulator to compare them here.</div>
+        </div>
+        <div id="compareTable" class="compare-table-wrap"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="clearAllScenarios" class="btn btn-ghost danger">Clear All</button>
+        <button id="closeCompareBtn" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="monteCarloModal" class="modal" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-md">
+      <div class="modal-header"><div class="h">⚙️ Monte Carlo Simulation</div><button class="modal-close" id="closeMonteCarlo">&times;</button></div>
+      <div class="modal-body">
+        <p class="muted small mb12">Set variance ranges. The simulator will run 1,000 randomized iterations to predict the probability distribution of Operating Profit.</p>
+        <div class="mc-inputs-grid">
+          <div class="mc-input-group"><label>Sales Variance (%)</label><div class="mc-range"><input type="number" id="mcSalesMin" value="-5"><input type="number" id="mcSalesMax" value="5"></div></div>
+          <div class="mc-input-group"><label>Variable Cost Variance (%)</label><div class="mc-range"><input type="number" id="mcVCMin" value="-2"><input type="number" id="mcVCMax" value="5"></div></div>
+          <div class="mc-input-group"><label>Fixed Cost Variance (%)</label><div class="mc-range"><input type="number" id="mcFCMin" value="0"><input type="number" id="mcFCMax" value="2"></div></div>
+        </div>
+        <button class="btn btn-primary btn-block mt14" id="runMonteCarlo">⚡ Run 1,000 Simulations</button>
+        <div id="mcResults" style="display:none;" class="mt14">
+          <div id="mcChartContainer" style="width:100%;height:280px;"></div>
+          <div class="mc-stats mt14">
+            <div class="mc-stat"><div class="mc-stat-label">Worst Case (5th %ile)</div><div class="mc-stat-value" id="mcWorst"></div></div>
+            <div class="mc-stat"><div class="mc-stat-label">Most Likely (Median)</div><div class="mc-stat-value" id="mcMedian"></div></div>
+            <div class="mc-stat"><div class="mc-stat-label">Best Case (95th %ile)</div><div class="mc-stat-value" id="mcBest"></div></div>
+          </div>
+          <div class="mc-probability mt12" id="mcProbability"></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" id="closeMonteCarloBtn">Close</button></div>
+    </div>
+  </div>
+
+  <div class="app" data-testid="bizlens-app">
+    <header class="nav" id="mainNav">
+      <div class="nav-left">
+        <div class="logo-wrap">
+          <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 32 32" width="28" height="28">
+              <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3b82f6"/><stop offset="100%" style="stop-color:#1d4ed8"/></linearGradient></defs>
+              <circle cx="16" cy="16" r="14" fill="url(#logoGrad)"/>
+              <path d="M10 20 L14 12 L18 16 L22 8" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="10" cy="20" r="2" fill="white"/><circle cx="14" cy="12" r="2" fill="white"/><circle cx="18" cy="16" r="2" fill="white"/><circle cx="22" cy="8" r="2" fill="white"/>
+            </svg>
+            <span>BizLens</span>
+          </div>
+          <div class="tagline">Financial Intelligence</div>
+        </div>
+        <div class="nav-divider"></div>
+        <select id="clientSelect" class="client-select" data-testid="client-select"></select>
+      </div>
+      <div class="nav-right">
+        <button id="goInput" class="btn btn-ghost nav-btn active" data-testid="nav-inputs-btn">Inputs</button>
+        <button id="goReport" class="btn btn-ghost nav-btn" data-testid="nav-report-btn">Report</button>
+        <button id="downloadPDFNav" class="btn nav-btn" disabled data-testid="nav-pdf-btn">PDF</button>
+        <button id="openSettings" class="btn btn-icon" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <!-- INPUT PAGE -->
+    <section id="pageInput" class="page" data-testid="page-input">
+      <div class="inputWrap">
+        <div class="card inputCard">
+          <div class="client-header">
+            <div><div class="h">Client Management</div><div class="muted">Auto-saves as you type.</div></div>
+            <div class="actions-inline">
+              <button id="newClient" class="btn btn-ghost btn-sm" data-testid="new-client-btn">+ New</button>
+              <button id="renameClient" class="btn btn-ghost btn-sm" data-testid="rename-client-btn">Rename</button>
+              <button id="deleteClient" class="btn btn-ghost btn-sm danger" data-testid="delete-client-btn">Delete</button>
+            </div>
+          </div>
+          <div class="hr mt14"></div>
+          <form id="inputForm" novalidate>
+            <div class="form-section" id="secBusiness">
+              <div class="form-section-header"><div class="form-section-icon">💰</div><div><div class="h">Business Performance</div></div></div>
+              <div class="row mt12">
+                <div><label>Period (months) <span class="req">*</span></label><input id="inputM" placeholder="12" required data-testid="input-period"></div>
+                <div><label>Sales (₹) <span class="req">*</span></label><input id="inputR" placeholder="25,00,000" required data-testid="input-sales"></div>
+              </div>
+              <div class="h sub mt14">Variable Costs Breakdown</div>
+              <div class="row mt8">
+                <div><label>Direct Materials (₹) <span class="req">*</span></label><input id="inputDM" placeholder="10,00,000" required></div>
+                <div><label>Direct Labor (₹)</label><input id="inputDL" placeholder="3,00,000"></div>
+              </div>
+              <div class="row mt8">
+                <div><label>Packaging & Logistics (₹)</label><input id="inputPKG" placeholder="2,00,000"></div>
+                <div><label>Other Variable (₹)</label><input id="inputOVC" placeholder="3,00,000"></div>
+              </div>
+              <div class="row mt8">
+                <div><label>Total Variable Costs (₹)</label><input id="inputVC" readonly class="readonly-field" placeholder="0" data-testid="input-vc"></div>
+                <div></div>
+              </div>
+              <div class="h sub mt14">Fixed Costs Breakdown</div>
+              <div class="row mt8">
+                <div><label>Rent / Lease (₹)</label><input id="inputRent" placeholder="1,40,000"></div>
+                <div><label>Salaries - Fixed (₹)</label><input id="inputSal" placeholder="1,20,000"></div>
+              </div>
+              <div class="row mt8">
+                <div><label>Utilities (₹)</label><input id="inputUtil" placeholder="30,000"></div>
+                <div><label>Marketing (₹)</label><input id="inputMktg" placeholder="50,000"></div>
+              </div>
+              <div class="row mt8">
+                <div><label>Admin / General (₹)</label><input id="inputAdmin" placeholder="80,000"></div>
+                <div><label>Total Fixed Costs (₹)</label><input id="inputFC" readonly class="readonly-field" placeholder="0" data-testid="input-fc"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Purchases (₹) <span class="req">*</span></label><input id="inputPUR" placeholder="15,00,000" required data-testid="input-purchases"></div>
+                <div><label>Interest (₹) <span class="req">*</span> <span class="hint-zero">0 if none</span></label><input id="inputINT" placeholder="90,000 or 0" required data-testid="input-interest"></div>
+              </div>
+              <div class="fc-interest-question mt12">
+                <div class="question-card">
+                  <div class="question-label">Does Fixed Cost include Interest?</div>
+                  <div class="question-options">
+                    <label class="radio-option"><input type="radio" name="fcIncludesInterest" id="fcIncludesInterestNo" value="no" checked><span class="radio-btn"></span><span>No</span></label>
+                    <label class="radio-option"><input type="radio" name="fcIncludesInterest" id="fcIncludesInterestYes" value="yes"><span class="radio-btn"></span><span>Yes</span></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt12">
+                <div><label>Target Profit (₹)</label><input id="inputTP" placeholder="3,00,000" data-testid="input-target-profit"></div>
+                <div><label>Inventory Change (₹)</label><input id="inputINV" placeholder="0"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Other Income (₹)</label><input id="inputOI" placeholder="0"></div>
+                <div><label>Non-cash Expenses (₹)</label><input id="inputNC" placeholder="0"></div>
+              </div>
+            </div>
+            <div class="hr mt14"></div>
+            <div class="form-section" id="secBalance">
+              <div class="form-section-header"><div class="form-section-icon">🏦</div><div><div class="h">Balance Sheet</div></div></div>
+              <div class="row mt12">
+                <div><label>Cash (₹) <span class="req">*</span></label><input id="bsCash" placeholder="2,50,000" required data-testid="input-cash"></div>
+                <div><label>Inventory (₹) <span class="req">*</span></label><input id="bsInv" placeholder="6,00,000" required data-testid="input-inventory"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Receivables (₹) <span class="req">*</span></label><input id="bsAR" placeholder="8,50,000" required data-testid="input-receivables"></div>
+                <div><label>Other Current Assets (₹)</label><input id="bsOtherCA" placeholder="0"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Loans & Advances (₹)</label><input id="bsLoansAdv" placeholder="0"></div>
+                <div><label>Payables (₹) <span class="req">*</span></label><input id="bsAP" placeholder="5,20,000" required data-testid="input-payables"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Other Current Liabilities (₹)</label><input id="bsCLX" placeholder="1,50,000"></div>
+                <div><label>Short-term Debt (₹)</label><input id="bsSTB" placeholder="3,00,000"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Long-term Debt (₹)</label><input id="bsLTB" placeholder="9,00,000"></div>
+                <div><label>Other Liabilities (₹)</label><input id="bsOtherLiab" placeholder="0"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Equity (₹) <span class="req">*</span></label><input id="bsEQ" placeholder="12,00,000" required data-testid="input-equity"></div>
+                <div><label>Realisable Fixed Assets (₹)</label><input id="realisableFA" placeholder="15,00,000"></div>
+              </div>
+              <div class="h sub mt14">Ageing & Concentration</div>
+              <div class="row mt12">
+                <div><label>Debtors ageing?</label><select id="arAgeingAvail"><option value="no">No</option><option value="yes">Yes</option></select></div>
+                <div><label>Creditors ageing?</label><select id="apAgeingAvail"><option value="no">No</option><option value="yes">Yes</option></select></div>
+              </div>
+              <div id="arAgeingBox" class="ageing-box mt12" style="display:none;">
+                <div class="ageing-label">
+                  Debtors Ageing (₹)
+                  <span class="ageing-totals">
+                    <span id="arAgeingTotal" class="ageing-total-value"></span>
+                    <span id="arAgeingDiff" class="ageing-diff"></span>
+                  </span>
+                </div>
+                <div class="grid g4 mt8">
+                  <div><label>0-30d</label><input id="ar0" placeholder="0"></div>
+                  <div><label>31-60d</label><input id="ar31" placeholder="0"></div>
+                  <div><label>61-90d</label><input id="ar61" placeholder="0"></div>
+                  <div><label>90+d</label><input id="ar90" placeholder="0"></div>
+                </div>
+              </div>
+              <div id="apAgeingBox" class="ageing-box mt12" style="display:none;">
+                <div class="ageing-label">
+                  Creditors Ageing (₹)
+                  <span class="ageing-totals">
+                    <span id="apAgeingTotal" class="ageing-total-value"></span>
+                    <span id="apAgeingDiff" class="ageing-diff"></span>
+                  </span>
+                </div>
+                <div class="grid g4 mt8">
+                  <div><label>0-30d</label><input id="ap0" placeholder="0"></div>
+                  <div><label>31-60d</label><input id="ap31" placeholder="0"></div>
+                  <div><label>61-90d</label><input id="ap61" placeholder="0"></div>
+                  <div><label>90+d</label><input id="ap90" placeholder="0"></div>
+                </div>
+              </div>
+              <div class="row mt12">
+                <div><label>Top Customers (% sales)</label><input id="topCust" placeholder="45"></div>
+                <div><label>Top Suppliers (% purchases)</label><input id="topSupp" placeholder="55"></div>
+              </div>
+              <div class="row mt12">
+                <div><label>Customer credit</label><select id="custCredit"><option value="policy">Formal</option><option value="practice">Practice</option><option value="na">N/A</option></select></div>
+                <div><label>Supplier credit</label><select id="suppCredit"><option value="policy">Formal</option><option value="practice">Practice</option><option value="na">N/A</option></select></div>
+              </div>
+            </div>
+            <div class="card add-prior-period mt14">
+              <div class="snapshot-row">
+                <div class="snapshot-name-wrap">
+                  <input type="text" id="priorPeriodName" placeholder="Period name (e.g. Jan 2025)" class="period-name-input">
+                  <button class="btn btn-snapshot btn-sm" id="takeSnapshot" type="button" data-testid="take-snapshot-btn">📸 Save Period Snapshot</button>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="addPriorPeriod" type="button">+ Add Prior Period Manually</button>
+              </div>
+              <div id="snapshotFeedback" class="snapshot-feedback" style="display:none;"></div>
+              <div id="priorPeriodChips" class="scenario-chips mt8"></div>
+            </div>
+            <div class="form-actions mt14">
+              <div class="form-actions-right">
+                <button class="btn btn-ghost btn-sm" id="exportPromptBtn" type="button" data-testid="export-data-btn">💾 Export Data</button>
+                <span class="autosave-indicator" id="autosaveIndicator">✓ Saved</span>
+                <button class="btn" type="submit" data-testid="generate-report-btn">⚡ Generate Report</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORT PAGE -->
+    <section id="pageReport" class="page" style="display:none;" data-testid="page-report">
+      <div class="report-header">
+        <div>
+          <div class="report-title" id="reportTitle">BizLens Report</div>
+          <div class="report-meta">
+            <span id="generatedOn">—</span>
+            <span class="badge" id="reportPeriodBadge">—</span>
+          </div>
+        </div>
+        <div class="report-header-right">
+          <button class="btn btn-ghost" id="goToInputs" data-testid="back-to-inputs-btn">← Back to Inputs</button>
+        </div>
+      </div>
+      
+      <div id="noReport" class="empty-state" style="display:none;">
+        <div class="empty-icon">📊</div>
+        <div class="h">No Data Available</div>
+        <div class="muted">Enter business details in the Inputs section first.</div>
+        <button class="btn mt12" id="goToInputsEmpty">Go to Inputs</button>
+      </div>
+
+      <div id="reportWrap">
+        <div class="report-view-toggle" data-testid="report-view-toggle">
+          <button id="toggleOperating" class="view-toggle-btn active" data-testid="toggle-operating">
+            <span class="toggle-icon">📈</span>Operating
+          </button>
+          <button id="toggleHealth" class="view-toggle-btn" data-testid="toggle-health">
+            <span class="toggle-icon">💊</span>Health
+          </button>
+          <button id="toggleInsights" class="view-toggle-btn" data-testid="toggle-insights">
+            <span class="toggle-icon">🔍</span>Insights
+          </button>
+          <button id="toggleSimulator" class="view-toggle-btn" data-testid="toggle-simulator">
+            <span class="toggle-icon">🔮</span>Simulator
+          </button>
+          <button id="toggleSummary" class="view-toggle-btn" data-testid="toggle-summary">
+            <span class="toggle-icon">📋</span>Summary
+          </button>
+          <button id="toggleTrends" class="view-toggle-btn"><span class="toggle-icon">📈</span>Trends</button>
+        </div>
+
+        <!-- OPERATING VIEW -->
+        <div id="operatingView" class="active" data-testid="operating-view">
+          <section class="section section-current mt14">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-icon">📈</div>
+                <div>
+                  <div class="section-title">Operating Performance</div>
+                  <div class="section-subtitle">Current month averages</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="kpi-grid mt14">
+              <div class="kpi-card kpi-sales">
+                <div class="kpi-header"><span class="kpi-label">Sales</span><span class="kpi-trend up" id="cSalesTrend" style="display:none;"></span></div>
+                <div class="kpi-value" id="cSalesM">—</div>
+                <div class="kpi-sub" id="cSalesT">—</div>
+              </div>
+              <div class="kpi-card kpi-vc">
+                <div class="kpi-header"><span class="kpi-label">Variable Costs</span><span class="kpi-trend down" id="cVCTrend" style="display:none;"></span></div>
+                <div class="kpi-value" id="cVCM">—</div>
+                <div class="kpi-sub" id="cVCT">—</div>
+              </div>
+              <div class="kpi-card kpi-fc">
+                <div class="kpi-header"><span class="kpi-label">Fixed Costs</span><span class="kpi-trend up" id="cFCTrend" style="display:none;"></span></div>
+                <div class="kpi-value" id="cFCM">—</div>
+                <div class="kpi-sub" id="cFCT">—</div>
+              </div>
+              <div class="kpi-card kpi-cm">
+                <div class="kpi-header"><span class="kpi-label">Contribution Margin</span></div>
+                <div class="kpi-value" id="cCM">—</div>
+                <div class="kpi-sub" id="cCMSub">—</div>
+              </div>
+              <div class="kpi-card kpi-be">
+                <div class="kpi-header"><span class="kpi-label">No Profit No Loss Point</span></div>
+                <div class="kpi-value" id="cBE">—</div>
+                <div class="kpi-sub">Monthly minimum sales</div>
+              </div>
+              <div class="kpi-card kpi-mos">
+                <div class="kpi-header"><span class="kpi-label">Sales Leading to Profit</span></div>
+                <div class="kpi-value" id="cMoS">—</div>
+                <div class="mos-bar"><div id="mosFill" class="mos-fill" style="width:0%"></div></div>
+                <div class="kpi-sub" id="cMoSSub">—</div>
+              </div>
+              <div class="kpi-card kpi-op">
+                <div class="kpi-header"><span class="kpi-label">Operating Profit</span><span class="kpi-trend up" id="cOpTrend" style="display:none;"></span></div>
+                <div class="kpi-value" id="cOpM">—</div>
+                <div class="kpi-sub" id="cOpPct">—</div>
+              </div>
+              <div class="kpi-card kpi-pl">
+                <div class="kpi-header"><span class="kpi-label">Actual P&L</span></div>
+                <div class="kpi-value" id="cPLT">—</div>
+                <div class="kpi-sub" id="cPLSub">—</div>
+              </div>
+            </div>
+
+            <div class="card mt14">
+              <div class="h sub">Monthly Split</div>
+              <div class="chart-container mt12" style="overflow:hidden;"><div id="chartStackCur" style="width:100%;height:180px;"></div></div>
+            </div>
+
+            <div class="cost-breakdown-row mt14">
+              <div class="cost-breakdown-card card">
+                <div class="cost-breakdown-title">Variable Cost Breakdown</div>
+                <div class="cost-breakdown-subtitle muted small">What's eating into contribution margin</div>
+                <div id="vcBreakdownChart" style="width:100%;height:260px;"></div>
+                <div id="vcBreakdownInsight" class="cost-insight mt8"></div>
+              </div>
+              <div class="cost-breakdown-card card">
+                <div class="cost-breakdown-title">Fixed Cost Breakdown</div>
+                <div class="cost-breakdown-subtitle muted small">Where fixed overheads are concentrated</div>
+                <div id="fcBreakdownChart" style="width:100%;height:260px;"></div>
+                <div id="fcBreakdownInsight" class="cost-insight mt8"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- SIMULATOR VIEW (own tab) -->
+        <div id="simulatorView" data-testid="simulator-view">
+          <section class="section section-sim mt14">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-icon icon-purple">🔮</div>
+                <div>
+                  <div class="section-title">Scenario Simulator</div>
+                  <div class="section-subtitle">Test changes and see full impact</div>
+                </div>
+              </div>
+            </div>
+            <div class="card mt14">
+              <div class="sim-compact">
+                <div class="sim-grid">
+                  <div class="sim-row"><div class="sim-label">Sales</div><input type="number" id="dSalesAbs" placeholder="Abs ±"><input type="number" id="dSalesPct" placeholder="% ±"></div>
+                  <div class="sim-row"><div class="sim-label">Variable</div><input type="number" id="dVCAbs" placeholder="Abs ±"><input type="number" id="dVCPct" placeholder="% ±"></div>
+                  <div class="sim-row"><div class="sim-label">Fixed</div><input type="number" id="dFCAbs" placeholder="Abs ±"><input type="number" id="dFCPct" placeholder="% ±"></div>
+                </div>
+                <div class="sim-presets mt12">
+                  <button class="btn btn-ghost btn-sm" id="preset20">Sales +20%</button>
+                  <button class="btn btn-ghost btn-sm" id="presetMargin">Margin +5%</button>
+                  <button class="btn btn-ghost btn-sm" id="presetCuts">Cut 10% FC</button>
+                  <button class="btn btn-ghost btn-sm" id="resetSim">Reset</button>
+                </div>
+                <div class="sim-actions-row mt14">
+                  <button class="btn btn-analyze" id="openScenarioDetail" data-testid="analyze-scenario-btn">⚡ Analyze Scenario</button>
+                  <button class="btn btn-ghost" id="openMonteCarlo">🎲 Probabilistic Simulation</button>
+                </div>
+              </div>
+              <div id="savedScenarioChips" class="scenario-chips mt12"></div>
+            </div>
+            <div class="card mt14">
+              <div class="card-header"><div><div class="h sub">Optimum Paths</div><div class="muted">Hit target profit</div></div><button id="runOptimum" class="btn btn-ghost btn-sm">Calculate</button></div>
+              <div id="optWarn" class="alert alert-warn mt12" style="display:none;"></div>
+              <div class="opt-scenarios mt12" id="optResults"></div>
+              <div class="muted small mt12" id="oNote">—</div>
+            </div>
+            <div class="card mt14">
+              <div class="h sub">Projections</div>
+              <div class="projections-grid mt12">
+                <div class="projection-card"><div class="projection-title">1 Month</div><div class="projection-items"><div class="projection-item"><span>Sales</span><span id="p1Sales">—</span></div><div class="projection-item"><span>Profit</span><span id="p1Op">—</span></div><div class="projection-item"><span>Safety Margin</span><span id="p1MoS">—</span></div></div><div class="projection-note" id="p1Note">—</div></div>
+                <div class="projection-card"><div class="projection-title">6 Months</div><div class="projection-items"><div class="projection-item"><span>Sales</span><span id="p6Sales">—</span></div><div class="projection-item"><span>Profit</span><span id="p6Op">—</span></div><div class="projection-item"><span>Safety Margin</span><span id="p6MoS">—</span></div></div><div class="projection-note" id="p6Note">—</div></div>
+                <div class="projection-card"><div class="projection-title">12 Months</div><div class="projection-items"><div class="projection-item"><span>Sales</span><span id="p12Sales">—</span></div><div class="projection-item"><span>Profit</span><span id="p12Op">—</span></div><div class="projection-item"><span>Safety Margin</span><span id="p12MoS">—</span></div></div><div class="projection-note" id="p12Note">—</div></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- HEALTH VIEW - FIX 1: Numbered headers instead of emoji icons -->
+        <div id="healthView" data-testid="health-view">
+          <section class="section section-health mt14">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-icon icon-teal">💊</div>
+                <div><div class="section-title">Business Health</div></div>
+              </div>
+              <div class="health-overall"><span id="healthBadge" class="health-badge-prominent">—</span></div>
+            </div>
+            
+            <!-- 1. Liquidity -->
+            <div class="health-section" data-section="liquidity">
+              <div class="health-section-header">
+                <div class="health-section-title-new">
+                  <span class="health-section-number" data-testid="health-number-1">1</span>
+                  <span class="health-section-name">Liquidity</span>
+                </div>
+              </div>
+              <div class="hc-body">
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text">
+                      <div class="health-card-title">Cash Runway</div>
+                      <div class="health-card-narrative">Cash sustains costs for <strong id="cashRunwayMonths">—</strong> months.</div>
+                      <div class="health-card-interpretation" id="liquidityInterpretation">—</div>
+                      <div class="health-card-base-data" id="liquidityFormula"></div>
+                    </div>
+                    <div class="health-card-visual">
+                      <div class="runway-bar"><div class="runway-fill" id="runwayFill" style="width:0%"></div></div>
+                      <div class="runway-markers"><span>0</span><span>5</span><span>10+</span></div>
+                    </div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="liquidityTag">—</div>
+                </div>
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text" style="width:100%;">
+                      <div class="health-card-title">Working Capital</div>
+                      <div class="health-card-narrative" id="wcNarrative">—</div>
+                      <div class="health-card-interpretation" id="wcInterpretation">—</div>
+                      <div class="health-card-details"><span>AR: <strong id="wcAR">—</strong></span><span>Inv: <strong id="wcInv">—</strong></span><span>AP: <strong id="wcAP">—</strong></span><span>Net: <strong id="wcNet">—</strong></span></div>
+                      <div class="health-card-toggle" id="wcToggleWrap" style="display:none;">
+                        <label class="inline-toggle"><span>Negative WC is strategic:</span><select id="wcIntentional" class="toggle-select"><option value="no">No</option><option value="yes">Yes</option></select></label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="wcTag">—</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 2. Discipline -->
+            <div class="health-section" data-section="discipline">
+              <div class="health-section-header">
+                <div class="health-section-title-new">
+                  <span class="health-section-number" data-testid="health-number-2">2</span>
+                  <span class="health-section-name">Discipline</span>
+                </div>
+              </div>
+              <div class="hc-body">
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text" id="arDisciplineText"><div class="health-card-title">Receivables</div><div class="health-card-narrative" id="arNarrative">—</div><div class="health-card-interpretation" id="arInterpretation">—</div></div>
+                    <div class="health-card-visual" id="arChartWrap" style="display:none;"><div id="arAgeingChart" style="width:100%;height:120px;"></div></div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="arTag">—</div>
+                </div>
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text" id="apDisciplineText">
+                      <div class="health-card-title">Payables</div>
+                      <div class="health-card-narrative" id="apNarrative">—</div>
+                      <div class="health-card-interpretation" id="apInterpretation">—</div>
+                      <div class="health-card-toggle" id="apToggleWrap" style="display:none;">
+                        <label class="inline-toggle"><span>Extended terms are negotiated:</span><select id="apStrategic" class="toggle-select"><option value="no">No</option><option value="yes">Yes</option></select></label>
+                      </div>
+                    </div>
+                    <div class="health-card-visual" id="apChartWrap" style="display:none;"><div id="apAgeingChart" style="width:100%;height:120px;"></div></div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="apTag">—</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 3. Structure -->
+            <div class="health-section" data-section="structure">
+              <div class="health-section-header">
+                <div class="health-section-title-new">
+                  <span class="health-section-number" data-testid="health-number-3">3</span>
+                  <span class="health-section-name">Structure</span>
+                </div>
+              </div>
+              <div class="hc-body">
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text" style="width:100%;"><div class="health-card-title">Leverage</div><div class="health-card-narrative" id="leverageNarrative">—</div><div class="health-card-interpretation" id="leverageInterpretation">—</div><div class="health-card-base-data"><span>Debt: <strong id="debtDisplay">—</strong></span><span>Equity: <strong id="equityDisplay">—</strong></span></div><div class="health-card-metric">D/E: <strong id="deRatio">—</strong></div></div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="leverageTag">—</div>
+                </div>
+                <div class="health-card">
+                  <div class="health-card-content">
+                    <div class="health-card-text" style="width:100%;"><div class="health-card-title">Interest Coverage</div><div class="health-card-narrative" id="icrNarrative">—</div><div class="health-card-interpretation" id="icrInterpretation">—</div><div class="health-card-base-data"><span>Op Profit: <strong id="opProfitDisplay">—</strong>/mo</span><span>Interest: <strong id="intDisplay">—</strong>/mo</span></div><div class="health-card-metric">ICR: <strong id="icrValue">—</strong></div></div>
+                  </div>
+                  <div class="health-card-tag-prominent" id="icrTag">—</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 4. Concentration -->
+            <div class="health-section" data-section="concentration">
+              <div class="health-section-header">
+                <div class="health-section-title-new">
+                  <span class="health-section-number" data-testid="health-number-4">4</span>
+                  <span class="health-section-name">Concentration</span>
+                </div>
+              </div>
+              <div class="hc-body">
+                <div class="health-card">
+                  <div class="health-card-content"><div class="health-card-text"><div class="health-card-title">Customers</div><div class="health-card-narrative" id="custConcNarrative">—</div><div class="health-card-interpretation" id="custConcInterpretation">—</div></div><div class="health-card-visual"><div id="custConcChart" style="width:100%;height:120px;"></div></div></div>
+                  <div class="health-card-tag-prominent" id="custConcTag">—</div>
+                </div>
+                <div class="health-card">
+                  <div class="health-card-content"><div class="health-card-text"><div class="health-card-title">Suppliers</div><div class="health-card-narrative" id="suppConcNarrative">—</div><div class="health-card-interpretation" id="suppConcInterpretation">—</div></div><div class="health-card-visual"><div id="suppConcChart" style="width:100%;height:120px;"></div></div></div>
+                  <div class="health-card-tag-prominent" id="suppConcTag">—</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 5. Networth -->
+            <div class="health-section" data-section="networth">
+              <div class="health-section-header">
+                <div class="health-section-title-new">
+                  <span class="health-section-number" data-testid="health-number-5">5</span>
+                  <span class="health-section-name">Networth</span>
+                </div>
+              </div>
+              <div class="hc-body">
+                <div class="health-card">
+                  <div class="health-card-content"><div class="health-card-text" style="width:100%;"><div class="health-card-title">Real Networth</div><div class="health-card-narrative" id="networthNarrative">—</div><div class="health-card-interpretation" id="networthInterpretation">—</div><div class="health-card-metric">Value: <strong id="networthValue">—</strong></div><div class="health-card-base-data" id="networthDetails"></div></div></div>
+                  <div class="health-card-tag-prominent" id="networthTag">—</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- INSIGHTS VIEW -->
+        <div id="insightsView" data-testid="insights-view">
+          <div id="insightsContent"></div>
+        </div>
+
+        <!-- SUMMARY VIEW -->
+        <div id="summaryView" data-testid="summary-view">
+          <div id="executiveSummaryContent" class="executive-summary"></div>
+        </div>
+
+        <!-- TRENDS VIEW -->
+        <div id="trendsView" class="view-content" style="display:none;">
+          <div id="trendsContent"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="./finance.js"></script>
+  <script src="./insights.js"></script>
+  <script src="./ui.js"></script>
+  <script src="./pdf.js"></script>
+  <script src="./bizlens-app.js"></script>
+
+  
+</body>
+</html>

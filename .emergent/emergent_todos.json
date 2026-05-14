@@ -1,0 +1,10 @@
+[
+  {
+    "content": "Fix all TypeScript build errors so `yarn build` passes cleanly",
+    "status": "completed"
+  },
+  {
+    "content": "Summarise what's still left to build for TFF v3",
+    "status": "in_progress"
+  }
+]

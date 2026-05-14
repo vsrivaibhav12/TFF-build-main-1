@@ -1,0 +1,251 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Refined neutral palette with teal accent */
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 6% 10%;
+    --primary: 174 84% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 174 84% 32%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 174 84% 32%;
+    --radius: 0.75rem;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.625rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    /* Surface layers */
+    --surface: 0 0% 100%;
+    --surface-elevated: 0 0% 100%;
+    --surface-overlay: 0 0% 100%;
+
+    /* Brand gradients */
+    --gradient-teal: linear-gradient(135deg, #14B8A6 0%, #0D9488 50%, #0F766E 100%);
+    --gradient-teal-soft: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%);
+    --gradient-subtle: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html, body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+  }
+  body {
+    font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    @apply text-[15px] leading-7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-zinc-900;
+  }
+
+  /* Generous spacing utilities matching design system */
+  .section-pad { @apply py-16 md:py-24; }
+  .container-app { @apply mx-auto w-full max-w-7xl px-6 md:px-8; }
+  .container-marketing { @apply mx-auto w-full max-w-6xl px-6 md:px-8; }
+}
+
+@layer components {
+  /* ---------- Typography utility classes ---------- */
+  .tff-page-title {
+    @apply text-[28px] md:text-[40px] font-bold tracking-tight text-zinc-900;
+    letter-spacing: -0.03em;
+  }
+  .tff-page-subtitle {
+    @apply text-base text-zinc-500 mt-2;
+  }
+  .tff-section-title {
+    @apply text-xl md:text-2xl font-semibold tracking-tight text-zinc-900;
+  }
+  .tff-subsection {
+    @apply text-lg font-semibold text-zinc-900;
+  }
+  .tff-body {
+    @apply text-base leading-7 text-zinc-700;
+  }
+  .tff-muted {
+    @apply text-base text-zinc-500;
+  }
+  .tff-caption {
+    @apply text-sm text-zinc-500;
+  }
+  .tff-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-widest text-zinc-400;
+  }
+  .tff-kpi-label {
+    @apply text-xs font-semibold uppercase tracking-widest text-zinc-400;
+  }
+  .tff-kpi-value {
+    @apply text-3xl font-semibold tabular-nums text-zinc-900;
+  }
+  .tff-kpi-value-lg {
+    @apply text-4xl font-bold tabular-nums text-zinc-900;
+  }
+  .tff-kpi-sub {
+    @apply text-sm text-zinc-500 mt-1;
+  }
+
+  /* ---------- Gradient text ---------- */
+  .text-gradient-teal {
+    background: var(--gradient-teal);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ---------- Surfaces ---------- */
+  .tff-card {
+    @apply rounded-xl border border-zinc-200 bg-white;
+  }
+  .tff-card-pad {
+    @apply p-5 md:p-6;
+  }
+  .tff-card-hover {
+    @apply transition-all duration-300 hover:border-zinc-300 hover:shadow-md;
+  }
+  .tff-card-interactive {
+    @apply rounded-xl border border-zinc-200 bg-white transition-all duration-300 hover:border-teal-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer;
+  }
+
+  /* Glass morphism utility */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20;
+  }
+  .glass-dark {
+    @apply bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/30;
+  }
+
+  /* Surface elevated */
+  .surface-elevated {
+    @apply bg-white border border-zinc-200/60 shadow-sm;
+  }
+
+  /* ---------- Page header rhythm ---------- */
+  .tff-page-header {
+    @apply flex items-start justify-between gap-4 flex-wrap;
+  }
+
+  /* ---------- Stack rhythm ---------- */
+  .tff-stack { @apply space-y-6; }
+  .tff-stack-sm { @apply space-y-4; }
+  .tff-stack-lg { @apply space-y-8; }
+
+  /* ---------- Pills / status chips ---------- */
+  .tff-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium;
+  }
+  .tff-pill-success {
+    @apply text-emerald-700 border-emerald-200 bg-emerald-50;
+  }
+  .tff-pill-warning {
+    @apply text-amber-700 border-amber-200 bg-amber-50;
+  }
+  .tff-pill-danger {
+    @apply text-red-700 border-red-200 bg-red-50;
+  }
+  .tff-pill-info {
+    @apply text-teal-700 border-teal-200 bg-teal-50;
+  }
+
+  /* ---------- Empty state ---------- */
+  .tff-empty {
+    @apply rounded-xl border-2 border-dashed border-zinc-200 bg-white p-10 text-center text-sm text-zinc-500;
+  }
+
+  /* ---------- Focus styles unified ---------- */
+  .tff-focus {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Shimmer loading animation */
+  .shimmer {
+    background: linear-gradient(90deg, #e4e4e7 25%, #f4f4f5 50%, #e4e4e7 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Teal glow shadow */
+  .shadow-teal-sm {
+    box-shadow: 0 1px 2px 0 rgb(13 148 136 / 0.05), 0 1px 3px 0 rgb(13 148 136 / 0.1);
+  }
+  .shadow-teal {
+    box-shadow: 0 4px 6px -1px rgb(13 148 136 / 0.1), 0 2px 4px -2px rgb(13 148 136 / 0.1);
+  }
+  .shadow-teal-lg {
+    box-shadow: 0 10px 15px -3px rgb(13 148 136 / 0.1), 0 4px 6px -4px rgb(13 148 136 / 0.1);
+  }
+}
+
+@layer base {
+  /* Table row hover is handled in components/ui/table.tsx */
+}
+
+/* =========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================= */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-in-right {
+  0% { opacity: 0; transform: translateX(12px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
